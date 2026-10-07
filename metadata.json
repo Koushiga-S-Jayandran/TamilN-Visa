@@ -1,0 +1,6 @@
+{
+  "name": "TamizN Visa",
+  "description": "From Heritage to Hidden Horizons. Intelligent Tamil Nadu travel decision engine, crowd insights, and day-wise planner.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
