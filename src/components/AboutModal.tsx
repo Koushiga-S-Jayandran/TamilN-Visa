@@ -48,23 +48,36 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
         <div className="p-6 sm:p-8 overflow-y-auto space-y-8 flex-1 text-xs text-stone-700 leading-relaxed">
           
           {/* Creator & Institutional Profile */}
-          <div className="bg-amber-50/70 p-5 rounded-2xl border border-amber-200/90 space-y-2">
+          <div className="bg-amber-50/70 p-5 rounded-2xl border border-amber-200/90 space-y-3">
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-900 block flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5 text-amber-700" />
               Creator & Institutional Identification
             </span>
-            <div className="text-sm font-bold text-stone-900">
-              Made by: <span className="text-amber-800">{APP_CONFIG.creator.name}</span>
+            <div className="space-y-1">
+              <div className="text-sm font-bold text-stone-900">
+                Made by: <span className="text-amber-800">{APP_CONFIG.creator.name}</span>
+              </div>
+              <div className="text-xs font-semibold text-stone-700">
+                {APP_CONFIG.creator.degree}
+              </div>
+              <div className="text-xs font-semibold text-stone-800 pt-1">
+                Faculty mentor: <span className="text-stone-900 font-bold">{APP_CONFIG.creator.mentor.name}</span>, {APP_CONFIG.creator.mentor.title}
+              </div>
+              <div className="text-xs text-stone-700 pt-0.5">
+                <a
+                  href={APP_CONFIG.creator.institutionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-800 underline font-semibold hover:text-amber-950 inline-flex items-center gap-1"
+                >
+                  <span>{APP_CONFIG.creator.institution}</span>
+                </a>
+                <span>, {APP_CONFIG.creator.location}</span>
+              </div>
             </div>
-            <div className="text-xs font-semibold text-stone-800">
-              {APP_CONFIG.creator.institution}
-            </div>
-            <div className="text-xs text-stone-600 flex items-center gap-1.5 pt-1">
+            <div className="text-[11px] text-stone-500 pt-2 border-t border-amber-200/60 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{APP_CONFIG.creator.location}, {APP_CONFIG.creator.state}</span>
-            </div>
-            <div className="text-[11px] text-stone-500 pt-2 border-t border-amber-200/60">
-              Prepared for State Tourism, Hackathon & Startup Demonstrations.
             </div>
           </div>
 
@@ -130,6 +143,98 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
               <li>Tamil Nadu Forest Department & Eco-Tourism Board</li>
               <li>District Police & Municipal Administrations</li>
             </ul>
+          </div>
+
+          {/* Future Plans Section */}
+          <div id="future-plans" className="space-y-4 pt-2">
+            <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+              <h3 className="text-xs uppercase font-bold tracking-wider text-stone-900 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+                Future Plans (3 Phases)
+              </h3>
+              <span className="text-[10px] font-mono text-stone-500 uppercase">
+                Transparent Roadmap
+              </span>
+            </div>
+
+            {/* PHASE 1: NEXT */}
+            <div className="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200/70 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white">
+                  Phase: NEXT
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-800">
+                  Core Extensions
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {APP_CONFIG.futurePlansThreePhases.next.map((item, idx) => (
+                  <div key={idx} className="bg-white p-3 rounded-xl border border-emerald-200/60 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-stone-900">{item.title}</strong>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PHASE 2: PILOT */}
+            <div className="bg-amber-50/50 p-4 rounded-2xl border border-amber-200/70 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-600 text-stone-950">
+                  Phase: PILOT
+                </span>
+                <span className="text-[11px] font-semibold text-amber-900">
+                  State-Wide Demonstrations
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {APP_CONFIG.futurePlansThreePhases.pilot.map((item, idx) => (
+                  <div key={idx} className="bg-white p-3 rounded-xl border border-amber-200/60 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-stone-900">{item.title}</strong>
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                        item.status === 'Live (beta)'
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          : 'bg-stone-100 text-stone-600 border border-stone-200'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PHASE 3: SCALE */}
+            <div className="bg-purple-50/50 p-4 rounded-2xl border border-purple-200/70 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-700 text-white">
+                  Phase: SCALE
+                </span>
+                <span className="text-[11px] font-semibold text-purple-900">
+                  Ecosystem Expansion
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {APP_CONFIG.futurePlansThreePhases.scale.map((item, idx) => (
+                  <div key={idx} className="bg-white p-3 rounded-xl border border-purple-200/60 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <strong className="text-stone-900">{item.title}</strong>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-stone-100 text-stone-600 border border-stone-200">
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
         </div>

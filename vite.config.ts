@@ -6,6 +6,15 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    define: {
+      __APP_BUILD_TIME__: JSON.stringify(
+        new Date().toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }) + ' IST'
+      ),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

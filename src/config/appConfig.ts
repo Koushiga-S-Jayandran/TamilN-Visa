@@ -8,10 +8,86 @@ export const APP_CONFIG = {
   tagline: 'From Heritage to Hidden Horizons.',
   secondaryTagline: 'Beyond the Famous. Into the Forgotten.',
   creator: {
-    name: 'Koushiga S Jayandran',
-    institution: 'Sri Ramakrishna Engineering College',
+    name: 'Koushiga.S.Jayandran',
+    degree: '1st Yr M.Tech CSE (Integrated 5 yr course)',
+    institution: 'Sri Ramakrishna Engineering College (SREC)',
+    institutionUrl: 'http://srec.ac.in/',
     location: 'Vattamalaipalayam, Coimbatore',
     state: 'Tamil Nadu, India',
+    mentor: {
+      name: 'Dr. Sakthivel Aruchamy',
+      title: 'Head of the First Year Programme (HoD-FYP)',
+      institution: 'Sri Ramakrishna Engineering College (SREC)',
+      institutionUrl: 'http://srec.ac.in/',
+    },
+  },
+  futurePlansThreePhases: {
+    next: [
+      {
+        title: 'Stays and Hotel Rooms',
+        desc: 'Price range, check-in times, official booking links by budget tier (TTDC and official portals).',
+        status: 'Live (beta)',
+      },
+      {
+        title: 'Public Transport Guide',
+        desc: 'Bus and train name, number and timings; verified sources TNSTC, SETC and Southern Railway.',
+        status: 'Live (beta)',
+      },
+      {
+        title: 'Live Weather Forecast Planning',
+        desc: '7-day atmospheric forecast, rainfall probability warnings and midday heat scheduling.',
+        status: 'Live (beta)',
+      },
+      {
+        title: 'Rapido-Style Fare Estimates',
+        desc: 'Ride-hailing style bike taxi, auto and cab fare estimates between consecutive stops.',
+        status: 'Live (beta)',
+      },
+    ],
+    pilot: [
+      {
+        title: 'Festival-Aware Crowd Forecasts',
+        desc: 'Pongal, Chithirai festival, Karthigai Deepam, and temple car festivals scheduling intelligence.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'Tamil & Multilingual Interface',
+        desc: 'Full bilingual Tamil Nadu vernacular experience in classical Tamil and English.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'Tourism-Board Dashboard',
+        desc: 'Dedicated analytics and seasonal flow dashboard for TTDC and district offices.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'QR Codes at Heritage Sites',
+        desc: 'Scannable QR deep links at monuments that open the offline trip dossier.',
+        status: 'Live (beta)',
+      },
+    ],
+    scale: [
+      {
+        title: 'Village & Agri-Tourism Listings',
+        desc: 'Authentic village pottery, handloom weaving, and organic farm stay trails.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'Solo & Women-Safety Mode',
+        desc: 'Well-lit corridors, vetted transport stands, and verified daylight routes.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'Group Trips & Expense Splitting',
+        desc: 'Collaborative shared itineraries and integrated group budget tracking.',
+        status: 'Coming soon',
+      },
+      {
+        title: 'Sustainability Score for Fragile Sites',
+        desc: 'Ecological carrying capacity indicators for Nilgiris, Pichavaram, and marine parks.',
+        status: 'Coming soon',
+      },
+    ],
   },
   vision: 'Transforming Tamil Nadu into a smarter, more attractive, and globally competitive tourism destination.',
   problemStatement:
@@ -27,7 +103,7 @@ export const APP_CONFIG = {
     'Offline Access Support with printable dossiers',
     'Simple & Guided User Experience suitable for competitions & tourists',
   ],
-  version: '2.4.0-Production',
+  version: '2.5.0-Production',
   status: 'Production Ready',
 };
 

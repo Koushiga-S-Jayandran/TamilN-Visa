@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const nilgirisPlaces: Place[] = [
+  {
+    "id": "nil-ooty-botanical",
+    "name": "Government Botanical Gardens Ooty",
+    "nameTamil": "ஊட்டி அரசு தாவரவியல் பூங்கா",
+    "district": "Nilgiris",
+    "locality": "Udhagamandalam",
+    "category": "Nature & Wildlife",
+    "latitude": 11.4194,
+    "longitude": 76.7117,
+    "description": "Expansive 55-acre terraced garden established in 1848 CE by the British, nurturing over a thousand exotic flora species, Italian floral borders, and a 20-million-year-old fossilized tree.",
+    "visitingHours": "07:00 AM - 06:30 PM",
+    "entryFee": "₹40 per adult, ₹20 per child",
+    "bestSeason": "April to June, September to November",
+    "dressCode": "Comfortable hill station attire and walking shoes.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Paved ramps across main lawns and lower glasshouse sections.",
+    "sourceName": "Tamil Nadu Horticulture Department",
+    "sourceUrl": "https://tnhorticulture.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "nil-pykara-falls",
+    "name": "Pykara Waterfalls & Lake",
+    "nameTamil": "பைகாரா நீர்வீழ்ச்சி மற்றும் ஏரி",
+    "district": "Nilgiris",
+    "locality": "Pykara",
+    "category": "Hills & Waterfalls",
+    "latitude": 11.4589,
+    "longitude": 76.5989,
+    "description": "Sacred Toda river cascading down stepped granite rocks into Pykara lake, surrounded by rolling Toda tribal downs, pine forests, and motorboat rides.",
+    "visitingHours": "08:30 AM - 05:30 PM",
+    "entryFee": "₹10 per person, Boating: ₹200 - ₹800 depending on boat type",
+    "bestSeason": "July to January",
+    "dressCode": "Warm layered clothing.",
+    "recommendedDurationMins": 105,
+    "accessibilityNotes": "Battery car available from parking to waterfall viewing deck.",
+    "sourceName": "Tamil Nadu Tourism Development Corporation",
+    "sourceUrl": "https://www.tamilnadutourism.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "nil-toy-train",
+    "name": "Nilgiri Mountain Railway (UNESCO Steam Heritage)",
+    "nameTamil": "நீலகிரி மலை இரயில் (யுனெஸ்கோ உலக பாரம்பரிய நீராவி ரயில்)",
+    "district": "Nilgiris",
+    "locality": "Coonoor to Ooty",
+    "category": "Heritage & Forts",
+    "latitude": 11.3531,
+    "longitude": 76.7959,
+    "description": "UNESCO World Heritage rack-and-pinion meter-gauge steam train climbing through 208 curves, 16 tunnels, and 250 bridges across misty Nilgiri tea hills.",
+    "visitingHours": "Fixed schedule (Mettupalayam - Ooty daily runs)",
+    "entryFee": "IRCTC rail fare: ₹15 to ₹205 (advance booking advised)",
+    "bestSeason": "October to March",
+    "dressCode": "Warm mountain wear.",
+    "recommendedDurationMins": 180,
+    "accessibilityNotes": "Heritage train platforms have step ascents into coaches.",
+    "sourceName": "Southern Railway / UNESCO World Heritage Centre",
+    "sourceUrl": "https://whc.unesco.org/en/list/944/",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default nilgirisPlaces;

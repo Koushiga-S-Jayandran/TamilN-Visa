@@ -7,7 +7,8 @@ import {
   ItineraryDay,
 } from '../types';
 import { TN_DISTRICTS } from '../config/appConfig';
-import { generateItinerary } from '../services/itineraryEngine';
+import { generateItinerary, getOfficialDistrict } from '../services/itineraryEngine';
+import { loadDistrictPlaces } from '../data/districts';
 import {
   MapPin,
   Calendar,
@@ -36,9 +37,9 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [districtSearch, setDistrictSearch] = useState('');
 
-  // Form State
+  // Form State - strictly normalized to official Tamil Nadu district
   const [destinationDistrict, setDestinationDistrict] = useState<string>(
-    initialDistrict || 'Coimbatore'
+    initialDistrict ? getOfficialDistrict(initialDistrict) : 'Coimbatore'
   );
   const [travelDate, setTravelDate] = useState<string>(
     new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]
@@ -110,9 +111,37 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
     'Finish before 6 PM',
   ];
 
-  const filteredDistricts = TN_DISTRICTS.filter((d) =>
-    d.toLowerCase().includes(districtSearch.toLowerCase())
-  );
+  const cityAliases: Record<string, string[]> = {
+    Nilgiris: ['ooty', 'coonoor', 'kotagiri'],
+    Dindigul: ['kodaikanal', 'kodai', 'palani'],
+    Ramanathapuram: ['rameswaram', 'rameshwaram', 'dhanushkodi'],
+    Chengalpattu: ['mahabalipuram', 'mamallapuram', 'covelong'],
+    Krishnagiri: ['hosur'],
+    Salem: ['yercaud'],
+    Virudhunagar: ['sivakasi', 'srivilliputhur', 'rajapalayam'],
+    Kancheepuram: ['kanchipuram', 'kanchi'],
+    Viluppuram: ['villupuram', 'gingee', 'senji'],
+    Tiruchirappalli: ['trichy', 'srirangam'],
+    Mayiladuthurai: ['tranquebar', 'tharangambadi', 'poompuhar'],
+    Thoothukudi: ['tuticorin', 'thiruchendur'],
+    Sivaganga: ['chettinad', 'karaikudi'],
+    Tenkasi: ['courtallam', 'kutralam'],
+    Tirupattur: ['yelagiri'],
+    Cuddalore: ['pichavaram', 'chidambaram'],
+    Dharmapuri: ['hogenakkal'],
+    Nagapattinam: ['velankanni', 'nagore'],
+  };
+
+  const filteredDistricts = TN_DISTRICTS.filter((d) => {
+    const search = districtSearch.toLowerCase().trim();
+    if (!search) return true;
+    if (d.toLowerCase().includes(search)) return true;
+    const aliases = cityAliases[d];
+    if (aliases && aliases.some((a) => a.includes(search) || search.includes(a))) {
+      return true;
+    }
+    return false;
+  });
 
   const toggleInterest = (interest: string) => {
     if (selectedInterests.includes(interest)) {
@@ -133,6 +162,8 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
   const handleStartGeneration = () => {
     setIsGenerating(true);
     setCurrentStep(9);
+    // Lazy-load district module
+    loadDistrictPlaces(destinationDistrict).catch(console.error);
 
     let stage = 0;
     const interval = setInterval(() => {
@@ -214,22 +245,46 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
             />
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-64 overflow-y-auto p-1">
-              {filteredDistricts.map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setDestinationDistrict(d)}
-                  className={`p-3 rounded-xl text-xs font-bold text-left transition-all border flex items-center justify-between ${
-                    destinationDistrict.toLowerCase() === d.toLowerCase()
-                      ? 'bg-amber-600 text-white border-amber-600 shadow-md'
-                      : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-amber-400 hover:bg-stone-100'
-                  }`}
-                >
-                  <span>{d}</span>
-                  {destinationDistrict.toLowerCase() === d.toLowerCase() && (
-                    <CheckCircle2 className="w-4 h-4 text-white shrink-0 ml-1" />
-                  )}
-                </button>
-              ))}
+              {filteredDistricts.map((d) => {
+                const hint =
+                  d === 'Nilgiris' ? 'Ooty' :
+                  d === 'Dindigul' ? 'Kodaikanal' :
+                  d === 'Ramanathapuram' ? 'Rameswaram' :
+                  d === 'Chengalpattu' ? 'Mahabalipuram' :
+                  d === 'Salem' ? 'Yercaud' :
+                  d === 'Virudhunagar' ? 'Sivakasi' :
+                  d === 'Krishnagiri' ? 'Hosur' :
+                  d === 'Kancheepuram' ? 'Kanchipuram' :
+                  d === 'Viluppuram' ? 'Gingee' :
+                  d === 'Tiruchirappalli' ? 'Trichy' :
+                  d === 'Mayiladuthurai' ? 'Tranquebar' :
+                  d === 'Thoothukudi' ? 'Tuticorin' :
+                  null;
+
+                return (
+                  <button
+                    key={d}
+                    onClick={() => setDestinationDistrict(d)}
+                    className={`p-3 rounded-xl text-xs font-bold text-left transition-all border flex items-center justify-between ${
+                      destinationDistrict.toLowerCase() === d.toLowerCase()
+                        ? 'bg-amber-600 text-white border-amber-600 shadow-md'
+                        : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-amber-400 hover:bg-stone-100'
+                    }`}
+                  >
+                    <div className="flex flex-col">
+                      <span>{d}</span>
+                      {hint && (
+                        <span className={`text-[10px] font-normal ${destinationDistrict.toLowerCase() === d.toLowerCase() ? 'text-amber-100' : 'text-stone-400'}`}>
+                          ({hint})
+                        </span>
+                      )}
+                    </div>
+                    {destinationDistrict.toLowerCase() === d.toLowerCase() && (
+                      <CheckCircle2 className="w-4 h-4 text-white shrink-0 ml-1" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="p-3 bg-amber-50/80 rounded-xl text-xs text-amber-900 border border-amber-200/80 flex items-center gap-2">

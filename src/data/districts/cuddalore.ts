@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const cuddalorePlaces: Place[] = [
+  {
+    "id": "cud-pichavaram",
+    "name": "Pichavaram Mangrove Forest",
+    "nameTamil": "பிச்சாவரம் சதுப்புநிலக் காடு",
+    "district": "Cuddalore",
+    "locality": "Pichavaram",
+    "category": "Nature & Wildlife",
+    "latitude": 11.4283,
+    "longitude": 79.7797,
+    "description": "World second largest mangrove wetland featuring over 4,000 tidal canals and estuaries navigated via traditional paddle and motor boats among canopy trees.",
+    "visitingHours": "08:00 AM - 05:00 PM",
+    "entryFee": "₹150 for rowing boat, ₹300 for motor boat",
+    "bestSeason": "November to February",
+    "dressCode": "Comfortable clothing, hat, and sunglasses for open boat ride.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Boarding jetty requires step descent into wooden boats.",
+    "sourceName": "Tamil Nadu Tourism Development Corporation",
+    "sourceUrl": "https://www.tamilnadutourism.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "cud-silver-beach",
+    "name": "Silver Beach Devanampattinam",
+    "nameTamil": "சில்வர் பீச் தேவனாம்பட்டினம்",
+    "district": "Cuddalore",
+    "locality": "Devanampattinam",
+    "category": "Beaches & Coastal",
+    "latitude": 11.7456,
+    "longitude": 79.7825,
+    "description": "Quiet sandy coast along the Coromandel shore with a natural backwater river estuary, historic Fort St. David ruins, and peaceful morning sea breezes.",
+    "visitingHours": "Open 24 Hours",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Casual beachwear and walking shoes.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Paved parking lot and walking path leading to shoreline.",
+    "sourceName": "Cuddalore District Administration",
+    "sourceUrl": "https://cuddalore.nic.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "cud-chidambaram-nataraja",
+    "name": "Chidambaram Nataraja Temple",
+    "nameTamil": "சிதம்பரம் தில்லை நடராஜர் திருக்கோயில்",
+    "district": "Cuddalore",
+    "locality": "Chidambaram",
+    "category": "Temples & Spiritual",
+    "latitude": 11.3992,
+    "longitude": 79.6934,
+    "description": "Ancient temple representing the Akasha (Space) element of Pancha Bhoota Sthalams, celebrated for its golden roof sanctum, Chidambara Rahasyam, and Cosmic Dance.",
+    "visitingHours": "06:00 AM - 12:00 PM, 05:00 PM - 10:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional temple dress code; men must remove shirts before inner sanctum.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Broad granite corridors and ramped thresholds to sabha mandapam.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1600100397608-f010f443834e?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default cuddalorePlaces;

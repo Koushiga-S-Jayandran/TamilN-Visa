@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const ramanathapuramPlaces: Place[] = [
+  {
+    "id": "ram-rameswaram-temple",
+    "name": "Ramanathaswamy Temple Rameswaram",
+    "nameTamil": "ராமேஸ்வரம் ராமநாதசுவாமி திருக்கோயில்",
+    "district": "Ramanathapuram",
+    "locality": "Rameswaram Island",
+    "category": "Temples & Spiritual",
+    "latitude": 9.2881,
+    "longitude": 79.3175,
+    "description": "Venerated Char Dham and Jyotirlinga pilgrimage site famous for the world longest pillared stone corridor with 1,212 sculpted pillars and 22 sacred theertham bathing wells.",
+    "visitingHours": "05:00 AM - 01:00 PM, 03:00 PM - 09:00 PM",
+    "entryFee": "Free (22 Theertham batch: ₹25 per person)",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional temple dress code; wet clothes must be changed after taking bath in theerthams.",
+    "recommendedDurationMins": 180,
+    "accessibilityNotes": "Level stone corridors throughout the third prakaram corridor.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "ram-dhanushkodi",
+    "name": "Dhanushkodi Ghost Town & Arichal Munai",
+    "nameTamil": "தனுஷ்கோடி புயல் நகரம் மற்றும் அரிச்சல் முனை",
+    "district": "Ramanathapuram",
+    "locality": "Dhanushkodi",
+    "category": "Beaches & Coastal",
+    "latitude": 9.1772,
+    "longitude": 79.4144,
+    "description": "Atmospheric ruins of the township destroyed in the 1964 cyclone at the southernmost tip of Rameswaram Island where the Bay of Bengal meets the Indian Ocean.",
+    "visitingHours": "06:00 AM - 05:30 PM (Entry closed at sunset by police check-post)",
+    "entryFee": "Free",
+    "bestSeason": "October to February",
+    "dressCode": "Windproof clothing, sunglasses, and sun protection.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Smooth national highway leads right up to the Arichal Munai roundabout.",
+    "sourceName": "Tamil Nadu Tourism Development Corporation",
+    "sourceUrl": "https://www.tamilnadutourism.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1621682372775-533449e550ed?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "ram-pamban-bridge",
+    "name": "Pamban Cantilever Sea Bridge",
+    "nameTamil": "பாம்பன் கடல் ரயில் பாலம்",
+    "district": "Ramanathapuram",
+    "locality": "Pamban Strait",
+    "category": "Heritage & Forts",
+    "latitude": 9.2789,
+    "longitude": 79.2017,
+    "description": "India historic first sea bridge opened in 1914 CE with a double-leaf bascule cantilever mechanism that raises to allow ships to pass beneath across the Palk Strait.",
+    "visitingHours": "Open 24 Hours (Best viewed from road bridge promenade during train crossings)",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Casual outdoor clothing.",
+    "recommendedDurationMins": 45,
+    "accessibilityNotes": "Road bridge footpath allows unhindered panoramic viewing.",
+    "sourceName": "Southern Railway / District Administration",
+    "sourceUrl": "https://sr.indianrailways.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default ramanathapuramPlaces;

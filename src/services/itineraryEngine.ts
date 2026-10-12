@@ -1,6 +1,7 @@
 import { ActivitySlot, ItineraryDay, TripPlannerInput, Destination } from '../types';
 import { DESTINATIONS_DATA } from '../data/destinations';
 import { FOOD_PLACES_DATA } from '../data/foodPlaces';
+import { TN_DISTRICTS } from '../config/appConfig';
 import { evaluateCrowd } from './crowdEngine';
 
 /**
@@ -21,9 +22,40 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): 
 }
 
 /**
- * TAMIZN VISA - Intelligent Day-by-Day Itinerary Engine
+ * Map user selected or search alias to the official Tamil Nadu district
+ */
+export function getOfficialDistrict(inputDistrict: string): string {
+  const cleaned = inputDistrict.trim().toLowerCase();
+  const directMatch = TN_DISTRICTS.find((d) => d.toLowerCase() === cleaned);
+  if (directMatch) return directMatch;
+
+  if (cleaned === 'kanchipuram') return 'Kancheepuram';
+  if (cleaned === 'villupuram') return 'Viluppuram';
+  if (cleaned === 'sivakasi') return 'Virudhunagar';
+  if (cleaned === 'ooty') return 'Nilgiris';
+  if (cleaned === 'kodaikanal') return 'Dindigul';
+  if (cleaned === 'rameswaram') return 'Ramanathapuram';
+  if (cleaned === 'mahabalipuram' || cleaned === 'mamallapuram') return 'Chengalpattu';
+  if (cleaned === 'hosur') return 'Krishnagiri';
+  if (cleaned === 'yercaud') return 'Salem';
+  if (cleaned === 'trichy') return 'Tiruchirappalli';
+  if (cleaned === 'tuticorin') return 'Thoothukudi';
+  if (cleaned === 'courtallam') return 'Tenkasi';
+  if (cleaned === 'yelagiri') return 'Tirupattur';
+  if (cleaned === 'hogenakkal') return 'Dharmapuri';
+  if (cleaned === 'pichavaram' || cleaned === 'chidambaram') return 'Cuddalore';
+  if (cleaned === 'velankanni') return 'Nagapattinam';
+
+  return inputDistrict;
+}
+
+/**
+ * TAMIZN VISA - Day-by-Day Itinerary Engine
  * Operating Window: 06:00 AM - 09:00 PM
- * Implements crowd-aware scheduling, realistic travel times, and structured meal windows.
+ * ENFORCES STRICT ZERO-BORROWING DISTRICT ISOLATION:
+ * place.district === selectedDistrict (exact match).
+ * If a district has fewer places than a trip needs, generates fewer stops.
+ * Never borrows from another district.
  */
 export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
   const {
@@ -36,22 +68,24 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
     selectedPreferences,
   } = input;
 
-  // 1. Filter destinations by district and user interests
-  let availableDestinations = DESTINATIONS_DATA.filter(
-    (d) => d.district.toLowerCase() === destinationDistrict.toLowerCase()
+  const officialDistrict = getOfficialDistrict(destinationDistrict);
+
+  // 1. STRICT FILTERING: place.district === selectedDistrict (exact match, NO borrowing, NO cross-district fallbacks)
+  const availableDestinations = DESTINATIONS_DATA.filter(
+    (d) => d.district === officialDistrict
   );
 
-  // If few destinations directly in this district, pull nearby regional destinations
-  if (availableDestinations.length < 3) {
-    const fallbackDestinations = DESTINATIONS_DATA.filter(
-      (d) => d.district.toLowerCase() !== destinationDistrict.toLowerCase()
-    ).slice(0, 4);
-    availableDestinations = [...availableDestinations, ...fallbackDestinations];
-  }
+  // Check if requested geographical features (like beach) are unavailable in this district
+  const wantsBeach = selectedInterests.some((i) => i.toLowerCase().includes('beach'));
+  const hasBeach = availableDestinations.some((d) => d.category === 'beaches');
+  const missingBeachNote =
+    wantsBeach && !hasBeach
+      ? ` Note: Beach experiences are not available in ${officialDistrict}.`
+      : '';
 
-  // Find district food places
+  // Find district food places (exact match only)
   const districtFood = FOOD_PLACES_DATA.filter(
-    (f) => f.district.toLowerCase() === destinationDistrict.toLowerCase()
+    (f) => f.district === officialDistrict
   );
 
   const avoidCrowds = selectedPreferences.includes('Avoid crowds');
@@ -72,15 +106,11 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
     const activities: ActivitySlot[] = [];
     let dayEstimatedCost = 0;
 
-    // Pick destinations for this day
-    const dayStartOffset = (dayIdx * placesPerDay) % Math.max(1, availableDestinations.length);
-    const dayDestinations: Destination[] = [];
-    for (let p = 0; p < placesPerDay; p++) {
-      const dest = availableDestinations[(dayStartOffset + p) % availableDestinations.length];
-      if (dest && !dayDestinations.some((d) => d.id === dest.id)) {
-        dayDestinations.push(dest);
-      }
-    }
+    // Allocate available distinct places strictly belonging to this district without cross-district borrowing
+    const dayDestinations = availableDestinations.slice(
+      dayIdx * placesPerDay,
+      (dayIdx + 1) * placesPerDay
+    );
 
     // Sort destinations crowd-first: temples/sacred/crowded spots first in the early morning
     dayDestinations.sort((a, b) => {
@@ -89,34 +119,49 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
       return 0;
     });
 
-    // 06:30 AM - Morning Departure & Morning Activity 1
-    const morningDest = dayDestinations[0] || availableDestinations[0];
-    const morningCrowd = evaluateCrowd(morningDest, dateStr, 7);
+    // 06:30 AM - Morning Activity 1
+    if (dayDestinations[0]) {
+      const morningDest = dayDestinations[0];
+      const morningCrowd = evaluateCrowd(morningDest, dateStr, 7);
 
-    activities.push({
-      timeWindow: '06:30 - 08:00 AM',
-      activityType: 'DESTINATION',
-      title: morningDest.name,
-      category: morningDest.category,
-      destinationId: morningDest.id,
-      district: morningDest.district,
-      durationMinutes: 90,
-      travelBufferMinutes: 20,
-      crowdLevel: morningCrowd.crowdLevel,
-      crowdPredictionType: morningCrowd.predictionType,
-      estimatedCostINR: morningDest.estimatedCostINR.min,
-      whyNowReason:
-        avoidCrowds || morningDest.category === 'temples'
-          ? 'Scheduled early morning to avoid peak tourist coach arrival and afternoon queues.'
-          : 'Ideal tranquil lighting and pleasant morning temperature.',
-      transportInfo: 'Local Auto / Taxi or morning state bus',
-      notes: morningDest.rules[0] || 'Modest clothing recommended',
-    });
-    dayEstimatedCost += morningDest.estimatedCostINR.min;
+      activities.push({
+        timeWindow: '06:30 - 08:00 AM',
+        activityType: 'DESTINATION',
+        title: morningDest.name,
+        category: morningDest.category,
+        destinationId: morningDest.id,
+        district: morningDest.district,
+        durationMinutes: 90,
+        travelBufferMinutes: 20,
+        crowdLevel: morningCrowd.crowdLevel,
+        crowdPredictionType: morningCrowd.predictionType,
+        estimatedCostINR: morningDest.estimatedCostINR.min,
+        whyNowReason:
+          avoidCrowds || morningDest.category === 'temples'
+            ? 'Scheduled early morning to avoid peak tourist coach arrival and afternoon queues.'
+            : 'Ideal tranquil lighting and pleasant morning temperature.',
+        transportInfo: 'Local Auto / Taxi or morning state bus',
+        notes: morningDest.rules[0] || 'Modest clothing recommended',
+      });
+      dayEstimatedCost += morningDest.estimatedCostINR.min;
+    } else {
+      activities.push({
+        timeWindow: '06:30 - 08:00 AM',
+        activityType: 'REST',
+        title: `Morning Heritage Walk in ${officialDistrict}`,
+        category: 'cultural',
+        district: officialDistrict,
+        durationMinutes: 90,
+        travelBufferMinutes: 10,
+        estimatedCostINR: 0,
+        whyNowReason: 'Relaxed morning stroll absorbing the peaceful local atmosphere.',
+        notes: 'Explore tranquil streets and traditional architecture',
+      });
+    }
 
     // 08:15 - 09:00 AM: Authentic South Indian Breakfast Break
     const morningEatery = districtFood[0] || {
-      name: `Traditional Tiffin Mess in ${morningDest.district}`,
+      name: `Traditional Tiffin Mess in ${officialDistrict}`,
       specialtyDishes: ['Ghee Roast Dosa', 'Piping Hot Filter Coffee', 'Soft Idli'],
       avgCostPerPersonINR: 120,
     };
@@ -126,45 +171,63 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
       activityType: 'MEAL',
       title: `Breakfast at ${morningEatery.name}`,
       category: 'food',
+      district: officialDistrict,
       durationMinutes: 45,
       travelBufferMinutes: 15,
       estimatedCostINR: morningEatery.avgCostPerPersonINR,
-      whyNowReason: 'Energy replenishment break after early morning temple/outdoor exploration.',
+      whyNowReason: 'Energy replenishment break with authentic local breakfast specialties.',
       notes: `Recommended dish: ${morningEatery.specialtyDishes[0]}`,
     });
     dayEstimatedCost += morningEatery.avgCostPerPersonINR;
 
-    // 09:45 AM - 12:00 PM: Midday Heritage or Nature Exploration
-    const midDest = dayDestinations[1] || availableDestinations[1 % availableDestinations.length];
-    const midCrowd = evaluateCrowd(midDest, dateStr, 11);
-    const dist1 = getDistanceKm(
-      morningDest.coordinates.lat,
-      morningDest.coordinates.lng,
-      midDest.coordinates.lat,
-      midDest.coordinates.lng
-    );
+    // 09:45 AM - 12:00 PM: Midday Exploration
+    if (dayDestinations[1]) {
+      const midDest = dayDestinations[1];
+      const midCrowd = evaluateCrowd(midDest, dateStr, 11);
+      const dist1 = dayDestinations[0]
+        ? getDistanceKm(
+            dayDestinations[0].coordinates.lat,
+            dayDestinations[0].coordinates.lng,
+            midDest.coordinates.lat,
+            midDest.coordinates.lng
+          )
+        : 5;
 
-    activities.push({
-      timeWindow: '09:45 AM - 12:00 PM',
-      activityType: 'DESTINATION',
-      title: midDest.name,
-      category: midDest.category,
-      destinationId: midDest.id,
-      district: midDest.district,
-      durationMinutes: 120,
-      travelBufferMinutes: Math.max(25, Math.round(dist1 * 3)),
-      crowdLevel: midCrowd.crowdLevel,
-      crowdPredictionType: midCrowd.predictionType,
-      estimatedCostINR: midDest.estimatedCostINR.min || 40,
-      whyNowReason: 'Coincides with primary museum/heritage complex visiting hours before midday closure.',
-      transportInfo: `Approx ${dist1} km transfer via main highway`,
-      notes: midDest.accessibilityInfo,
-    });
-    dayEstimatedCost += midDest.estimatedCostINR.min || 40;
+      activities.push({
+        timeWindow: '09:45 AM - 12:00 PM',
+        activityType: 'DESTINATION',
+        title: midDest.name,
+        category: midDest.category,
+        destinationId: midDest.id,
+        district: midDest.district,
+        durationMinutes: 120,
+        travelBufferMinutes: Math.max(20, Math.round(dist1 * 3)),
+        crowdLevel: midCrowd.crowdLevel,
+        crowdPredictionType: midCrowd.predictionType,
+        estimatedCostINR: midDest.estimatedCostINR.min || 40,
+        whyNowReason: 'Coincides with primary visiting hours before midday sanctum closure.',
+        transportInfo: `Approx ${dist1} km transfer within ${officialDistrict}`,
+        notes: midDest.accessibilityInfo,
+      });
+      dayEstimatedCost += midDest.estimatedCostINR.min || 40;
+    } else {
+      activities.push({
+        timeWindow: '09:45 AM - 12:00 PM',
+        activityType: 'REST',
+        title: `Local Craft & Market Exploration in ${officialDistrict}`,
+        category: 'cultural',
+        district: officialDistrict,
+        durationMinutes: 120,
+        travelBufferMinutes: 15,
+        estimatedCostINR: 0,
+        whyNowReason: 'Immersive exploration of local artisan bazaars and regional specialties.',
+        notes: 'Discover authentic handicrafts and agricultural produce',
+      });
+    }
 
     // 12:30 - 02:00 PM: Regional Feast & Rest Break
     const lunchEatery = districtFood[1] || districtFood[0] || {
-      name: `Authentic Meals Mess (${destinationDistrict})`,
+      name: `Authentic Meals Mess (${officialDistrict})`,
       specialtyDishes: ['South Indian Full Meals on Banana Leaf', 'Rasam & Payasam'],
       avgCostPerPersonINR: 200,
     };
@@ -174,15 +237,16 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
       activityType: 'MEAL',
       title: `Traditional Lunch at ${lunchEatery.name}`,
       category: 'food',
+      district: officialDistrict,
       durationMinutes: 75,
       travelBufferMinutes: 15,
       estimatedCostINR: lunchEatery.avgCostPerPersonINR,
-      whyNowReason: 'Avoids intense midday sun when many Tamil Nadu temple sanctums are closed (12:30 - 04:00 PM).',
+      whyNowReason: 'Avoids midday heat when many temple sanctums are traditionally closed (12:30 - 04:00 PM).',
       notes: `Authentic regional menu: ${lunchEatery.specialtyDishes.join(', ')}`,
     });
     dayEstimatedCost += lunchEatery.avgCostPerPersonINR;
 
-    // Afternoon / Evening Activity
+    // Afternoon / Evening Activity (Only if destinations exist, otherwise generate fewer stops without borrowing)
     if (!finishEarly && dayDestinations[2]) {
       const eveDest = dayDestinations[2];
       const eveCrowd = evaluateCrowd(eveDest, dateStr, 17);
@@ -195,11 +259,11 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
         destinationId: eveDest.id,
         district: eveDest.district,
         durationMinutes: 105,
-        travelBufferMinutes: 30,
+        travelBufferMinutes: 25,
         crowdLevel: eveCrowd.crowdLevel,
         crowdPredictionType: eveCrowd.predictionType,
         estimatedCostINR: eveDest.estimatedCostINR.min || 25,
-        whyNowReason: 'Optimal golden hour lighting and cooler breezes across hill/coastal sights.',
+        whyNowReason: 'Optimal golden hour lighting and pleasant evening breeze.',
         transportInfo: 'Local Auto / Bus',
         notes: eveDest.bestVisitingTime,
       });
@@ -210,34 +274,36 @@ export function generateItinerary(input: TripPlannerInput): ItineraryDay[] {
     activities.push({
       timeWindow: '05:45 - 06:30 PM',
       activityType: 'REST',
-      title: 'Evening Kaapi (Filter Coffee) & Local Bazaar Stroll',
+      title: `Evening Kaapi & Town Stroll in ${officialDistrict}`,
       category: 'cultural',
+      district: officialDistrict,
       durationMinutes: 45,
       travelBufferMinutes: 10,
       estimatedCostINR: 60,
-      whyNowReason: 'Relaxed transition period soaking in local town evening culture.',
-      notes: 'Enjoy hot banana roast bajji or piping filter coffee',
+      whyNowReason: 'Relaxed transition period soaking in local evening life.',
+      notes: 'Enjoy piping hot filter coffee and regional evening snacks',
     });
     dayEstimatedCost += 60;
 
-    // 07:30 - 09:00 PM: Evening Dinner & Day Wrap
+    // 07:30 - 08:45 PM: Evening Dinner
     activities.push({
       timeWindow: '07:30 - 08:45 PM',
       activityType: 'MEAL',
-      title: 'Dinner & Journey Recap',
+      title: `Dinner in ${officialDistrict}`,
       category: 'food',
+      district: officialDistrict,
       durationMinutes: 75,
-      estimatedCostINR: 200,
-      whyNowReason: 'Concluding daily travel inside recommended 09:00 PM safety window.',
-      notes: 'Prepare overnight rest or review saved offline route',
+      estimatedCostINR: 180,
+      whyNowReason: 'Concluding daily journey inside recommended 09:00 PM operating window.',
+      notes: 'Rest and prepare for the next leg of your journey',
     });
-    dayEstimatedCost += 200;
+    dayEstimatedCost += 180;
 
     days.push({
       dayNumber: dayIdx + 1,
       date: dateStr,
-      focusArea: `${destinationDistrict} - ${dayDestinations.map((d) => d.name.split(' ')[0]).join(' & ')}`,
-      summary: `Day ${dayIdx + 1} focuses on balanced heritage, crowd-optimized morning darshan, authentic culinary stops, and smooth transit.`,
+      focusArea: `${officialDistrict}${dayDestinations.length > 0 ? ' - ' + dayDestinations.map((d) => d.name.split(' ')[0]).join(' & ') : ''}`,
+      summary: `Day ${dayIdx + 1} provides a balanced, realistic itinerary exclusively in ${officialDistrict} with genuine local culture and time buffers.${missingBeachNote}`,
       activities,
       dayBudgetINR: dayEstimatedCost,
     });

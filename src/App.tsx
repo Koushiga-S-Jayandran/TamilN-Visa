@@ -24,6 +24,7 @@ import { FOOD_PLACES_DATA } from './data/foodPlaces';
 import { TN_DISTRICTS_DATA } from './data/districts';
 import { CATEGORIES, APP_CONFIG } from './config/appConfig';
 import { executeSmartSearch, SmartSearchResult } from './services/smartSearch';
+import { getOfficialDistrict } from './services/itineraryEngine';
 import { StorageService } from './services/storageService';
 import {
   Compass,
@@ -69,7 +70,7 @@ export default function App() {
   };
 
   const handleStartPlanForDistrict = (district: string) => {
-    setPrefilledDistrict(district);
+    setPrefilledDistrict(getOfficialDistrict(district));
     setCurrentTab('planner');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const ariyalurPlaces: Place[] = [
+  {
+    "id": "ari-gangaikonda-cholapuram",
+    "name": "Gangaikonda Cholapuram Temple",
+    "nameTamil": "கங்கைகொண்ட சோழபுரம் பிரகதீஸ்வரர் கோயில்",
+    "district": "Ariyalur",
+    "locality": "Gangaikonda Cholapuram",
+    "category": "Temples & Spiritual",
+    "latitude": 11.2061,
+    "longitude": 79.456,
+    "description": "UNESCO World Heritage monument built by Rajendra Chola I commemorating his northern expedition, featuring a living stone sanctum, delicate carvings, and monolithic Nandi.",
+    "visitingHours": "06:00 AM - 08:30 PM",
+    "entryFee": "Free",
+    "bestSeason": "November to February",
+    "dressCode": "Traditional temple attire; shoulders and knees covered.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Level stone pathways with gentle ramp access to main courtyard.",
+    "sourceName": "Archaeological Survey of India (ASI)",
+    "sourceUrl": "https://asi.nic.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "ari-karaivetti-birds",
+    "name": "Karaivetti Bird Sanctuary",
+    "nameTamil": "கரைவெட்டி பறவைகள் சரணாலயம்",
+    "district": "Ariyalur",
+    "locality": "Karaivetti",
+    "category": "Nature & Wildlife",
+    "latitude": 10.9702,
+    "longitude": 79.0468,
+    "description": "One of the largest inland freshwater bird reserves in Tamil Nadu, hosting thousands of migratory bar-headed geese, pelicans, and grey herons.",
+    "visitingHours": "06:00 AM - 06:00 PM",
+    "entryFee": "₹10 per adult",
+    "bestSeason": "November to February",
+    "dressCode": "Comfortable outdoor clothing and walking shoes.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Gravel watchtower paths; assistance advised for elderly visitors.",
+    "sourceName": "Tamil Nadu Forest Department",
+    "sourceUrl": "https://www.forests.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "ari-fossil-park",
+    "name": "Ariyalur Cretaceous Marine Fossil Park",
+    "nameTamil": "அரியலூர் கடல் புதைபடிவ அருங்காட்சியகம்",
+    "district": "Ariyalur",
+    "locality": "Varanavasi",
+    "category": "Heritage & Forts",
+    "latitude": 11.1398,
+    "longitude": 79.0743,
+    "description": "Geological fossil reserve preserving 65-million-year-old Cretaceous marine fossils, ammonites, and dinosaurian bone traces excavated from ancient seabed strata.",
+    "visitingHours": "09:30 AM - 05:30 PM (Closed Mondays)",
+    "entryFee": "₹20 per person",
+    "bestSeason": "October to March",
+    "dressCode": "Casual comfortable attire.",
+    "recommendedDurationMins": 60,
+    "accessibilityNotes": "Wheelchair accessible indoor museum gallery.",
+    "sourceName": "Tamil Nadu Department of Geology and Mining",
+    "sourceUrl": "https://www.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1584824486509-112e4181ff6b?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default ariyalurPlaces;

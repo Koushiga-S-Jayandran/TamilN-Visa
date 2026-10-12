@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Destination } from '../types';
 import { DESTINATIONS_DATA } from '../data/destinations';
 import { Sparkles, MapPin, ShieldCheck, ArrowRight, Compass } from 'lucide-react';
@@ -13,7 +13,12 @@ export const HiddenGemsView: React.FC<HiddenGemsViewProps> = ({
   onSelectDestination,
   onPlanTripForDistrict,
 }) => {
-  const hiddenGems = DESTINATIONS_DATA.filter((d) => d.isHiddenGem);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
+  const allHiddenGems = DESTINATIONS_DATA.filter((d) => d.isHiddenGem);
+  const hiddenGems = allHiddenGems.filter(
+    (d) => selectedDistrict === 'all' || d.district === selectedDistrict
+  );
+  const districts = ['all', ...Array.from(new Set(allHiddenGems.map((d) => d.district)))].sort();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 animate-fade-in">
@@ -37,6 +42,27 @@ export const HiddenGemsView: React.FC<HiddenGemsViewProps> = ({
 
         {/* Decorative subtle backdrop ornament */}
         <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-80 h-80 rounded-full bg-purple-600/10 blur-3xl pointer-events-none" />
+      </div>
+
+      {/* Filter Toolbar */}
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-stone-500 whitespace-nowrap">Filter by District:</label>
+          <select
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
+            className="px-3.5 py-2 rounded-xl border border-stone-300 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          >
+            {districts.map((d) => (
+              <option key={d} value={d}>
+                {d === 'all' ? 'All Districts' : d}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="text-xs text-stone-500 font-medium">
+          Showing {hiddenGems.length} verified hidden gem{hiddenGems.length === 1 ? '' : 's'}
+        </div>
       </div>
 
       {/* Grid of Verified Hidden Gems */}

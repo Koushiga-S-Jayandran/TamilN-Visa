@@ -22,6 +22,11 @@ import {
   AlertCircle,
   HelpCircle,
 } from 'lucide-react';
+import { DESTINATIONS_DATA } from '../data/destinations';
+import { WeatherForecastWidget } from './WeatherForecastWidget';
+import { WhereToStayCard } from './WhereToStayCard';
+import { PublicTransportCard } from './PublicTransportCard';
+import { ConsecutiveLegFareEstimator } from './ConsecutiveLegFareEstimator';
 
 interface ItineraryDashboardProps {
   plannerInput: TripPlannerInput;
@@ -45,6 +50,12 @@ export const ItineraryDashboard: React.FC<ItineraryDashboardProps> = ({
   );
 
   const activeDay = itineraryDays[activeDayIndex] || itineraryDays[0];
+
+  const districtPlaces = DESTINATIONS_DATA.filter(
+    (d) => d.district === plannerInput.destinationDistrict
+  );
+  const districtLat = districtPlaces[0]?.coordinates.lat ?? 13.0827;
+  const districtLng = districtPlaces[0]?.coordinates.lng ?? 80.2707;
 
   const totalEstimatedCost = itineraryDays.reduce((acc, d) => acc + d.dayBudgetINR, 0);
   const allocatedBudget = plannerInput.customBudgetINR || totalEstimatedCost * 1.2;
@@ -180,6 +191,14 @@ export const ItineraryDashboard: React.FC<ItineraryDashboardProps> = ({
         </div>
       </div>
 
+      {/* 1. Weather Forecast Planning (Open-Meteo 7-Day Forecast & Advisories) */}
+      <WeatherForecastWidget
+        district={plannerInput.destinationDistrict}
+        latitude={districtLat}
+        longitude={districtLng}
+        travelDate={plannerInput.travelDate}
+      />
+
       {/* Day Selector Navigation Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-stone-200">
         {itineraryDays.map((day, idx) => (
@@ -220,9 +239,9 @@ export const ItineraryDashboard: React.FC<ItineraryDashboardProps> = ({
           const isRest = slot.activityType === 'REST';
 
           return (
-            <div
-              key={index}
-              className={`rounded-2xl p-5 border transition-all ${
+            <React.Fragment key={index}>
+              <div
+                className={`rounded-2xl p-5 border transition-all ${
                 isMeal
                   ? 'bg-orange-50/60 border-orange-200/80'
                   : isRest
@@ -299,9 +318,48 @@ export const ItineraryDashboard: React.FC<ItineraryDashboardProps> = ({
 
               </div>
             </div>
+
+            {/* Consecutive Stop Ride-Hailing Fare Estimator */}
+            {index < activeDay.activities.length - 1 && (() => {
+              const nextSlot = activeDay.activities[index + 1];
+              const currentDest = slot.destinationId
+                ? DESTINATIONS_DATA.find((d) => d.id === slot.destinationId)
+                : null;
+              const nextDest = nextSlot.destinationId
+                ? DESTINATIONS_DATA.find((d) => d.id === nextSlot.destinationId)
+                : null;
+
+              const fromLat = currentDest?.coordinates.lat ?? districtLat;
+              const fromLng = currentDest?.coordinates.lng ?? districtLng;
+              const toLat = nextDest?.coordinates.lat ?? (districtLat + 0.015 * (index + 1));
+              const toLng = nextDest?.coordinates.lng ?? (districtLng + 0.015 * (index + 1));
+
+              return (
+                <ConsecutiveLegFareEstimator
+                  fromName={slot.title}
+                  toName={nextSlot.title}
+                  fromLat={fromLat}
+                  fromLng={fromLng}
+                  toLat={toLat}
+                  toLng={toLng}
+                />
+              );
+            })()}
+          </React.Fragment>
           );
         })}
       </div>
+
+      {/* 2. Where to Stay Card (Filtered to district and matched to budget tier) */}
+      <WhereToStayCard
+        district={plannerInput.destinationDistrict}
+        travelerBudgetTier={plannerInput.budgetTier}
+      />
+
+      {/* 3. Public Transport Guide (Bus & Train with warning notice and booking links) */}
+      <PublicTransportCard
+        district={plannerInput.destinationDistrict}
+      />
 
     </div>
   );

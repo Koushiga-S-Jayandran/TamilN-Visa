@@ -14,6 +14,11 @@ import {
   PhoneCall,
   AlertTriangle,
 } from 'lucide-react';
+import { WeatherForecastWidget } from './WeatherForecastWidget';
+import { WhereToStayCard } from './WhereToStayCard';
+import { PublicTransportCard } from './PublicTransportCard';
+import { DESTINATIONS_DATA } from '../data/destinations';
+import { EmeraldDoveRoundel } from './TamilBrandLogo';
 
 interface OfflineTripSummaryModalProps {
   trip: SavedTrip | null;
@@ -26,10 +31,16 @@ export const OfflineTripSummaryModal: React.FC<OfflineTripSummaryModalProps> = (
 }) => {
   if (!trip) return null;
 
-  // Filter alerts relevant to this destination district
+  // Filter alerts strictly relevant to this destination district (exact match)
   const districtAlerts = DESTINATION_ALERTS_DATA.filter(
-    (a) => a.district.toLowerCase() === trip.destinationDistrict.toLowerCase()
+    (a) => a.district === trip.destinationDistrict
   );
+
+  const districtPlaces = DESTINATIONS_DATA.filter(
+    (d) => d.district === trip.destinationDistrict
+  );
+  const districtLat = districtPlaces[0]?.coordinates.lat ?? 13.0827;
+  const districtLng = districtPlaces[0]?.coordinates.lng ?? 80.2707;
 
   const handlePrint = () => {
     try {
@@ -74,16 +85,19 @@ export const OfflineTripSummaryModal: React.FC<OfflineTripSummaryModalProps> = (
           
           {/* Header Banner */}
           <div className="border-b-2 border-stone-900 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <div className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-700 mb-1">
-                {APP_CONFIG.brandName} • OFFICIAL OFFLINE DOSSIER
+            <div className="flex items-center gap-3">
+              <EmeraldDoveRoundel sizeClassName="w-12 h-12" />
+              <div>
+                <div className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-700 mb-0.5">
+                  {APP_CONFIG.brandName} • OFFICIAL OFFLINE DOSSIER
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-950">
+                  {trip.name}
+                </h1>
+                <p className="text-xs text-stone-500 italic">
+                  “{APP_CONFIG.tagline}”
+                </p>
               </div>
-              <h1 className="text-3xl font-serif font-bold text-stone-950">
-                {trip.name}
-              </h1>
-              <p className="text-xs text-stone-500 italic mt-0.5">
-                “{APP_CONFIG.tagline}”
-              </p>
             </div>
 
             <div className="text-left sm:text-right text-xs text-stone-600 space-y-0.5">
@@ -150,6 +164,28 @@ export const OfflineTripSummaryModal: React.FC<OfflineTripSummaryModalProps> = (
               </div>
             ))}
           </div>
+
+          {/* Weather Snapshot in Offline Dossier */}
+          <WeatherForecastWidget
+            district={trip.destinationDistrict}
+            latitude={districtLat}
+            longitude={districtLng}
+            travelDate={trip.travelDate}
+            isOfflineDossier={true}
+          />
+
+          {/* Stays & Accommodation in Offline Dossier */}
+          <WhereToStayCard
+            district={trip.destinationDistrict}
+            travelerBudgetTier="Mid-range"
+            isOfflineDossier={true}
+          />
+
+          {/* Public Transport & Getting There in Offline Dossier */}
+          <PublicTransportCard
+            district={trip.destinationDistrict}
+            isOfflineDossier={true}
+          />
 
           {/* Essential Tamil Nadu Emergency & Tourism Helplines */}
           <div className="border-t-2 border-stone-200 pt-6 space-y-3">

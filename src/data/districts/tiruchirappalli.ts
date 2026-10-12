@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const tiruchirappalliPlaces: Place[] = [
+  {
+    "id": "try-rockfort",
+    "name": "Tiruchirappalli Rockfort & Ucchi Pillayar Temple",
+    "nameTamil": "திருச்சி மலைக்கோட்டை உச்சிப் பிள்ளையார் திருக்கோயில்",
+    "district": "Tiruchirappalli",
+    "locality": "Rockfort",
+    "category": "Temples & Spiritual",
+    "latitude": 10.8281,
+    "longitude": 78.6975,
+    "description": "Perched atop an ancient 3.8-billion-year-old quartz rock formation rising 83 meters above the plains, offering sweeping Kaveri river views and historic rock-cut shrines.",
+    "visitingHours": "06:00 AM - 08:30 PM",
+    "entryFee": "₹10 entry fee",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional attire; sturdy walking shoes for 417 rock-cut steps.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Requires climbing 417 stone steps; resting landings provided.",
+    "sourceName": "Archaeological Survey of India (ASI) & HR&CE",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1621847468516-1ed5d0df56fe?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "try-srirangam",
+    "name": "Sri Ranganathaswamy Temple Srirangam",
+    "nameTamil": "ஸ்ரீரங்கம் அரங்கநாதசுவாமி திருக்கோயில்",
+    "district": "Tiruchirappalli",
+    "locality": "Srirangam Island",
+    "category": "Temples & Spiritual",
+    "latitude": 10.8625,
+    "longitude": 78.69,
+    "description": "Largest functioning Hindu temple complex in the world spanning 156 acres across seven concentric walled enclosures, crowned by the colossal 73-meter Rajagopuram.",
+    "visitingHours": "06:00 AM - 01:00 PM, 03:30 PM - 09:00 PM",
+    "entryFee": "Free (Special Darshan ₹50 - ₹250)",
+    "bestSeason": "November to February",
+    "dressCode": "Traditional attire strictly enforced: dhoti for men, saree for women.",
+    "recommendedDurationMins": 150,
+    "accessibilityNotes": "Wheelchair access up to fifth enclosure; assistance needed for inner sanctum.",
+    "sourceName": "HR&CE Department Tamil Nadu / UNESCO Asia-Pacific Award",
+    "sourceUrl": "https://srirangam.org",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1600100397608-f010f443834e?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "try-kallanai",
+    "name": "Kallanai (Grand Anicut - 2nd Century CE Chola Dam)",
+    "nameTamil": "கல்லணை (கரிகால சோழன் கட்டிய அணை)",
+    "district": "Tiruchirappalli",
+    "locality": "Grand Anicut",
+    "category": "Heritage & Forts",
+    "latitude": 10.8336,
+    "longitude": 78.8189,
+    "description": "World oldest functioning water-diversion stone dam engineered by King Karikala Chola across the Kaveri River in the second century CE, flanked by gardens and memorial parks.",
+    "visitingHours": "08:00 AM - 06:30 PM",
+    "entryFee": "₹10 per adult",
+    "bestSeason": "August to February",
+    "dressCode": "Casual comfortable clothes.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Paved dam crest promenade with easy ramp walking.",
+    "sourceName": "Public Works Department (Water Resources) Tamil Nadu",
+    "sourceUrl": "https://www.wrd.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1546587348-d12660c30c50?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default tiruchirappalliPlaces;

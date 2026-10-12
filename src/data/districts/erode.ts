@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const erodePlaces: Place[] = [
+  {
+    "id": "erd-bhavani-sangameshwarar",
+    "name": "Bhavani Sangameshwarar Temple",
+    "nameTamil": "பவானி சங்கமேஸ்வரர் திருக்கோயில் (தென்னக திரிவேணி சங்கமம்)",
+    "district": "Erode",
+    "locality": "Bhavani",
+    "category": "Temples & Spiritual",
+    "latitude": 11.4475,
+    "longitude": 77.6833,
+    "description": "Revered Triveni Sangam of the South where the Cauvery, Bhavani, and subterranean Amudha rivers converge; ancient Chola shrine noted for stone twin-cradle architecture.",
+    "visitingHours": "05:30 AM - 01:00 PM, 04:00 PM - 09:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional temple dress code.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Level river bank courtyard with ramped access.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1546587348-d12660c30c50?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "erd-kodiveri",
+    "name": "Kodiveri Dam & Stepping Waterfalls",
+    "nameTamil": "கொடிவேரி அணை மற்றும் நீர்வீழ்ச்சி",
+    "district": "Erode",
+    "locality": "Gobichettipalayam",
+    "category": "Hills & Waterfalls",
+    "latitude": 11.5306,
+    "longitude": 77.375,
+    "description": "Seventeenth-century masonry barrage built across the Bhavani River where gentle river cascade steps create safe shallow bathing waters in lush parklands.",
+    "visitingHours": "08:30 AM - 06:00 PM",
+    "entryFee": "₹10 per adult",
+    "bestSeason": "August to February",
+    "dressCode": "Casual wear; change of clothes recommended.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Paved garden paths up to dam promenade.",
+    "sourceName": "Tamil Nadu Public Works Department (Water Resources)",
+    "sourceUrl": "https://www.wrd.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "erd-vellode",
+    "name": "Vellode Bird Sanctuary",
+    "nameTamil": "வெள்ளோடு பறவைகள் சரணாலயம்",
+    "district": "Erode",
+    "locality": "Vellode",
+    "category": "Nature & Wildlife",
+    "latitude": 11.2542,
+    "longitude": 77.6536,
+    "description": "Serene 77-hectare wetland reservoir hosting migratory pelicans, pintails, and teals, featuring circumambulatory embankment walkways and bird observatory watchtowers.",
+    "visitingHours": "06:00 AM - 06:00 PM",
+    "entryFee": "₹20 per adult",
+    "bestSeason": "November to March",
+    "dressCode": "Comfortable walking gear and camera/binoculars.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Gravel perimeter trail with shady seating.",
+    "sourceName": "Tamil Nadu Forest Department",
+    "sourceUrl": "https://www.forests.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default erodePlaces;

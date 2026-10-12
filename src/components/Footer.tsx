@@ -1,6 +1,7 @@
 import React from 'react';
 import { Compass, Sparkles, MapPin, Award, ShieldCheck, Heart } from 'lucide-react';
 import { APP_CONFIG } from '../config/appConfig';
+import { BUILD_INFO } from '../config/buildInfo';
 import { NavTab } from './Navbar';
 import { TamilBrandLogo } from './TamilBrandLogo';
 import { KolamDivider } from './KolamAccents';
@@ -96,6 +97,20 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
                   About TamizN Visa & Data Sources
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => {
+                    onOpenAbout();
+                    setTimeout(() => {
+                      document.getElementById('future-plans')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 150);
+                  }}
+                  className="hover:text-amber-300 transition-colors flex items-center gap-1 text-purple-300 font-medium"
+                >
+                  <Sparkles className="w-3 h-3 text-purple-400" />
+                  <span>Future Plans (3 Phases)</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -105,19 +120,32 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
               <Award className="w-3.5 h-3.5" />
               Creator & Institution
             </h4>
-            <div className="text-xs space-y-1.5 text-stone-300">
+            <div className="text-xs space-y-1 text-stone-300">
               <p className="font-semibold text-stone-100">
                 Made by: <span className="text-amber-300">{APP_CONFIG.creator.name}</span>
               </p>
-              <p className="text-stone-300 font-medium">
-                {APP_CONFIG.creator.institution}
+              <p className="text-[11px] text-stone-300">
+                {APP_CONFIG.creator.degree}
               </p>
-              <p className="text-stone-400 flex items-center gap-1.5 pt-1">
+              <p className="text-[11px] text-stone-300 pt-1">
+                Faculty mentor: <span className="text-stone-100 font-bold">{APP_CONFIG.creator.mentor.name}</span>, {APP_CONFIG.creator.mentor.title}
+              </p>
+              <p className="text-[11px] text-stone-400 pt-0.5">
+                <a
+                  href={APP_CONFIG.creator.institutionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 underline font-medium hover:text-amber-300"
+                >
+                  {APP_CONFIG.creator.institution}
+                </a>
+              </p>
+              <p className="text-[11px] text-stone-400 flex items-center gap-1 pt-0.5">
                 <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
                 <span>{APP_CONFIG.creator.location}</span>
               </p>
             </div>
-            <div className="pt-2 border-t border-stone-800 text-[11px] text-stone-400">
+            <div className="pt-2 border-t border-stone-800 text-[10px] text-stone-400">
               Prepared for State Tourism Competitions & Innovation Presentations
             </div>
           </div>
@@ -138,10 +166,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
 
         </div>
 
-        {/* Bottom Credits & Legal */}
+        {/* Bottom Credits & Legal & Build Stamp */}
         <div className="pt-8 border-t border-stone-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <div>
-            © {new Date().getFullYear()} {APP_CONFIG.brandName}. Designed & Developed by {APP_CONFIG.creator.name}.
+          <div className="space-y-1">
+            <div>
+              Designed & Developed by {APP_CONFIG.creator.name}.
+            </div>
+            {/* Small visible build stamp in footer: Version 2.0 | Built <build date and time> */}
+            <div className="text-[11px] font-mono text-amber-400/90 font-semibold tracking-wide">
+              {BUILD_INFO.buildStamp}
+            </div>
           </div>
           <div className="flex items-center gap-1 text-stone-400">
             <span>Rooted in Tamil Heritage, Culture & Technology</span>

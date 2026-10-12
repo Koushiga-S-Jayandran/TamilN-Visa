@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const thoothukudiPlaces: Place[] = [
+  {
+    "id": "tut-snows-basilica",
+    "name": "Our Lady of Snows Basilica",
+    "nameTamil": "பனிமய மாதா பேராலயம்",
+    "district": "Thoothukudi",
+    "locality": "Beach Road",
+    "category": "Heritage & Forts",
+    "latitude": 8.7961,
+    "longitude": 78.1583,
+    "description": "Sixteenth-century Portuguese basilica overlooking the pearl fishery harbor, honoring the sacred wooden statue of Our Lady of Snows gifted from Manila in 1555 CE.",
+    "visitingHours": "05:30 AM - 08:30 PM",
+    "entryFee": "Free",
+    "bestSeason": "Year-round (Grand annual festival in August)",
+    "dressCode": "Modest respectful clothing.",
+    "recommendedDurationMins": 60,
+    "accessibilityNotes": "Level paved church compound with direct seaside road approach.",
+    "sourceName": "Tamil Nadu Tourism Development Corporation",
+    "sourceUrl": "https://www.tamilnadutourism.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "tut-hare-island",
+    "name": "Hare Island & Beach (Muyal Theevu)",
+    "nameTamil": "முயல் தீவு மற்றும் கடற்கரை",
+    "district": "Thoothukudi",
+    "locality": "Hare Island",
+    "category": "Beaches & Coastal",
+    "latitude": 8.7833,
+    "longitude": 78.1833,
+    "description": "Picturesque barrier island connected via causeway, offering pristine sandy shores, casuarina plantations, sea breezes, and views of the Gulf of Mannar marine ecosystem.",
+    "visitingHours": "06:00 AM - 06:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Casual beachwear.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Motorable paved road directly to coastal picnic edge.",
+    "sourceName": "Thoothukudi Port Trust",
+    "sourceUrl": "https://www.vocport.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "tut-thiruchendur",
+    "name": "Thiruchendur Subramanya Swamy Temple",
+    "nameTamil": "திருச்செந்தூர் அருள்மிகு சுப்பிரமணிய சுவாமி திருக்கோயில்",
+    "district": "Thoothukudi",
+    "locality": "Thiruchendur",
+    "category": "Temples & Spiritual",
+    "latitude": 8.4975,
+    "longitude": 78.1286,
+    "description": "Second Arupadai Veedu of Lord Murugan uniquely situated right on the shore of the Bay of Bengal, celebrating Murugan victory over Surapadman at Soorasamharam.",
+    "visitingHours": "05:00 AM - 09:00 PM",
+    "entryFee": "Free (Special Darshan ₹20 - ₹250)",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional temple dress code; men must remove shirts before inner sanctum.",
+    "recommendedDurationMins": 150,
+    "accessibilityNotes": "Ramped coastal walkways leading from beach to sanctum entrance.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1621847468516-1ed5d0df56fe?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default thoothukudiPlaces;

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Destination, FoodPlace } from '../types';
 import { DESTINATIONS_DATA } from '../data/destinations';
 import { FOOD_PLACES_DATA } from '../data/foodPlaces';
-import { TN_DISTRICTS_DATA, DistrictInfo } from '../data/districts';
+import { TN_DISTRICTS_DATA, DistrictInfo, loadDistrictPlaces } from '../data/districts';
 import { CATEGORIES, CategoryId, TN_DISTRICTS } from '../config/appConfig';
 import { DestinationCard } from './DestinationCard';
 import { InteractiveMap } from './InteractiveMap';
@@ -35,6 +35,13 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
+  // Trigger lazy loading of the district module when selected
+  useEffect(() => {
+    if (selectedDistrict !== 'all') {
+      loadDistrictPlaces(selectedDistrict).catch(console.error);
+    }
+  }, [selectedDistrict]);
+
   // Regions of Tamil Nadu
   const regions = [
     'all',
@@ -45,9 +52,9 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
     'Chera / Southern',
   ];
 
-  // Filtered destinations
+  // Filtered destinations strictly matching selected district
   const filteredDestinations = DESTINATIONS_DATA.filter((dest) => {
-    if (selectedDistrict !== 'all' && dest.district.toLowerCase() !== selectedDistrict.toLowerCase()) {
+    if (selectedDistrict !== 'all' && dest.district !== selectedDistrict) {
       return false;
     }
     if (selectedCategory !== 'all') {
@@ -61,7 +68,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   });
 
   const selectedDistrictInfo = TN_DISTRICTS_DATA.find(
-    (d) => d.name.toLowerCase() === selectedDistrict.toLowerCase()
+    (d) => d.name === selectedDistrict
   );
 
   const displayedDistricts = TN_DISTRICTS_DATA.filter((d) => {
@@ -258,8 +265,12 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       {/* Main View: Grid vs Map */}
       {viewMode === 'map' ? (
         <InteractiveMap
-          destinations={filteredDestinations.length > 0 ? filteredDestinations : DESTINATIONS_DATA}
-          foodPlaces={FOOD_PLACES_DATA}
+          destinations={filteredDestinations}
+          foodPlaces={
+            selectedDistrict !== 'all'
+              ? FOOD_PLACES_DATA.filter((f) => f.district === selectedDistrict)
+              : FOOD_PLACES_DATA
+          }
           onSelectDestination={onSelectDestination}
         />
       ) : (
@@ -274,14 +285,148 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 />
               ))}
             </div>
+          ) : selectedCategory === 'beaches' && selectedDistrict !== 'all' ? (
+            <div className="bg-amber-50/90 border-2 border-amber-300 rounded-3xl p-8 sm:p-12 text-center border max-w-2xl mx-auto space-y-5 shadow-lg animate-fade-in">
+              <div className="w-14 h-14 rounded-2xl bg-amber-200 text-amber-900 flex items-center justify-center mx-auto shadow-inner">
+                <Compass className="w-7 h-7" />
+              </div>
+              <div className="space-y-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase bg-amber-200/80 text-amber-950">
+                  Inland Destination Notice
+                </span>
+                <h4 className="text-2xl font-serif font-black text-stone-900">
+                  Beach experiences are not available in {selectedDistrict}
+                </h4>
+              </div>
+              <p className="text-sm text-stone-700 leading-relaxed max-w-lg mx-auto">
+                {selectedDistrict} is located inland in Tamil Nadu. For pristine coastal surf, maritime heritage, and sunset shores, we recommend exploring our verified coastal destinations:
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Chengalpattu');
+                    setSelectedCategory('heritage');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Mahabalipuram Shore</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Ramanathapuram');
+                    setSelectedCategory('beaches');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-cyan-800 hover:bg-cyan-900 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Dhanushkodi & Rameswaram</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Cuddalore');
+                    setSelectedCategory('beaches');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Silver Beach & Pichavaram</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Chennai');
+                    setSelectedCategory('beaches');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Marina Beach Chennai</span>
+                </button>
+              </div>
+              <div className="pt-2">
+                <button
+                  onClick={() => setSelectedCategory('all')}
+                  className="text-xs font-bold text-amber-900 underline hover:text-amber-700"
+                >
+                  ← Show all verified attractions in {selectedDistrict}
+                </button>
+              </div>
+            </div>
+          ) : (selectedCategory === 'hills' || selectedCategory === 'nature') && selectedDistrict !== 'all' ? (
+            <div className="bg-emerald-50/90 border-2 border-emerald-300 rounded-3xl p-8 sm:p-12 text-center border max-w-2xl mx-auto space-y-5 shadow-lg animate-fade-in">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-200 text-emerald-900 flex items-center justify-center mx-auto shadow-inner">
+                <Compass className="w-7 h-7" />
+              </div>
+              <div className="space-y-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase bg-emerald-200/80 text-emerald-950">
+                  Topography Notice
+                </span>
+                <h4 className="text-2xl font-serif font-black text-stone-900">
+                  Mountain & hill experiences are not available in {selectedDistrict}
+                </h4>
+              </div>
+              <p className="text-sm text-stone-700 leading-relaxed max-w-lg mx-auto">
+                {selectedDistrict} is situated on the plains / delta river basin. For cool mist, tea valleys, and mountain viewpoints, we recommend visiting our celebrated hill destinations:
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Nilgiris');
+                    setSelectedCategory('nature');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Ooty & Coonoor</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Dindigul');
+                    setSelectedCategory('hills');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Kodaikanal Lake</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Salem');
+                    setSelectedCategory('hills');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Yercaud Shevaroy Hills</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDistrict('Tirupattur');
+                    setSelectedCategory('hills');
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Yelagiri Hills</span>
+                </button>
+              </div>
+              <div className="pt-2">
+                <button
+                  onClick={() => setSelectedCategory('all')}
+                  className="text-xs font-bold text-emerald-900 underline hover:text-emerald-700"
+                >
+                  ← Show all verified attractions in {selectedDistrict}
+                </button>
+              </div>
+            </div>
           ) : (
             <div className="bg-white rounded-3xl p-12 text-center border border-stone-200 max-w-xl mx-auto space-y-4">
               <Info className="w-10 h-10 text-amber-600 mx-auto" />
               <h4 className="text-xl font-serif font-bold text-stone-900">
-                Additional Verified Places in Verification Pipeline
+                {selectedCategory !== 'all' ? `${selectedCategory} experiences are not currently listed in ${selectedDistrict}` : 'Explore Other Districts'}
               </h4>
               <p className="text-xs text-stone-600 leading-relaxed">
-                Under TamizN Visa's Zero-Fabrication rule, destinations are strictly loaded from verified Archaeological Survey of India (ASI) and TTDC registry data.
+                Under TamizN Visa's Zero-Fabrication rule, destinations are strictly loaded from verified Archaeological Survey of India (ASI) and TTDC registry data without placeholders.
               </p>
               <button
                 onClick={() => {

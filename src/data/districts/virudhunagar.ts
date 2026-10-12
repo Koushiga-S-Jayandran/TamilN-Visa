@@ -1,0 +1,72 @@
+import { Place } from './types';
+
+export const virudhunagarPlaces: Place[] = [
+  {
+    "id": "vrd-badrakali-amman-sivakasi",
+    "name": "Arulmigu Badrakali Amman Temple Sivakasi",
+    "nameTamil": "சிவகாசி பத்திரகாளியம்மன் திருக்கோயில்",
+    "district": "Virudhunagar",
+    "locality": "Sivakasi",
+    "category": "Temples & Spiritual",
+    "latitude": 9.4539,
+    "longitude": 77.7983,
+    "description": "Vibrant eighteenth-century temple crowned by a towering 110-foot multi-tiered rajagopuram and sacred golden vimana, dedicated to Goddess Badrakali in industrial Sivakasi.",
+    "visitingHours": "06:00 AM - 12:30 PM, 04:30 PM - 09:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March (Panguni Pongal festival in April)",
+    "dressCode": "Traditional South Indian temple attire.",
+    "recommendedDurationMins": 60,
+    "accessibilityNotes": "Level stone courtyard with smooth entrance walkways.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1621847468516-1ed5d0df56fe?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "vrd-ayyanar-falls",
+    "name": "Ayyanar Falls (Western Ghats Foothills)",
+    "nameTamil": "அய்யனார் நீர்வீழ்ச்சி (ராஜபாளையம்)",
+    "district": "Virudhunagar",
+    "locality": "Rajapalayam Foothills",
+    "category": "Hills & Waterfalls",
+    "latitude": 9.4308,
+    "longitude": 77.4725,
+    "description": "Cascading natural stream and waterfall plunging from the Western Ghats rainforests near Rajapalayam, flanked by neem groves, fresh air, and an Ayyanar jungle temple.",
+    "visitingHours": "06:30 AM - 05:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "September to January",
+    "dressCode": "Casual trekking clothes and sturdy footwear.",
+    "recommendedDurationMins": 120,
+    "accessibilityNotes": "Gentle forest walking trail with stone steps near waterfall pool.",
+    "sourceName": "Tamil Nadu Tourism Development Corporation",
+    "sourceUrl": "https://www.tamilnadutourism.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "vrd-srivilliputhur-andal",
+    "name": "Andal Temple Srivilliputhur (Emblem of Tamil Nadu)",
+    "nameTamil": "ஸ்ரீவில்லிபுத்தூர் ஆண்டாள் திருக்கோயில் (தமிழ்நாடு அரசு சின்னம்)",
+    "district": "Virudhunagar",
+    "locality": "Srivilliputhur",
+    "category": "Temples & Spiritual",
+    "latitude": 9.5103,
+    "longitude": 77.6322,
+    "description": "Eighth-century temple whose soaring 192-foot eleven-tier rajagopuram serves as the official state emblem of the Government of Tamil Nadu, birthplace of poetess Andal.",
+    "visitingHours": "06:00 AM - 01:00 PM, 04:00 PM - 09:00 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March (Aadi Pooram festival in July/August)",
+    "dressCode": "Traditional temple attire (dhoti/saree required).",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Paved stone corridors and ramped entrance to outer mandapam.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03",
+    "imageUrl": "https://images.unsplash.com/photo-1600100397608-f010f443834e?auto=format&fit=crop&w=1200&q=85"
+  }
+];
+
+export default virudhunagarPlaces;
