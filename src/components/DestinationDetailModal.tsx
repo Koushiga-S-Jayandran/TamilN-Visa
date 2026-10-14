@@ -3,6 +3,7 @@ import { Destination } from '../types';
 import { evaluateCrowd } from '../services/crowdEngine';
 import { getDestinationWeather } from '../services/weatherService';
 import { TamilWeatherBadge } from './TamilWeatherBadge';
+import { OfflinePlaceQRModal } from './OfflinePlaceQRModal';
 import {
   X,
   MapPin,
@@ -17,7 +18,9 @@ import {
   Camera,
   CheckCircle2,
   Calendar,
+  QrCode,
 } from 'lucide-react';
+import { buildGoogleMapsUrl } from '../utils/maps';
 
 interface DestinationDetailModalProps {
   destination: Destination | null;
@@ -31,6 +34,7 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   onPlanForThisPlace,
 }) => {
   const [showCrowdFactors, setShowCrowdFactors] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   if (!destination) return null;
 
@@ -280,12 +284,35 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
 
         {/* Footer Actions */}
         <div className="p-4 sm:p-5 bg-stone-50 border-t border-stone-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-100 font-semibold text-xs transition-colors"
-          >
-            Close
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-100 font-semibold text-xs transition-colors"
+            >
+              Close
+            </button>
+            <button
+              onClick={() => setShowQrModal(true)}
+              className="px-4 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-amber-50 text-stone-800 font-semibold text-xs transition-colors flex items-center gap-1.5"
+            >
+              <QrCode className="w-4 h-4 text-amber-700" />
+              <span>Offline QR Code</span>
+            </button>
+            <a
+              href={buildGoogleMapsUrl({
+                name: destination.name,
+                locality: destination.cityArea,
+                district: destination.district,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-amber-50 text-stone-800 font-semibold text-xs transition-colors flex items-center gap-1.5"
+            >
+              <MapPin className="w-4 h-4 text-amber-700" />
+              <span>View on Google Maps</span>
+              <ExternalLink className="w-3 h-3 text-stone-400" />
+            </a>
+          </div>
           {onPlanForThisPlace && (
             <button
               onClick={() => {
@@ -301,6 +328,13 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
         </div>
 
       </div>
+
+      {/* Offline Place QR Deep Link Modal */}
+      <OfflinePlaceQRModal
+        destination={destination}
+        isOpen={showQrModal}
+        onClose={() => setShowQrModal(false)}
+      />
     </div>
   );
 };

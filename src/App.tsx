@@ -17,6 +17,11 @@ import { SearchResultSection } from './components/SearchResultSection';
 import { DestinationCard } from './components/DestinationCard';
 import { KolamDivider } from './components/KolamAccents';
 import { TamilBrandLogo } from './components/TamilBrandLogo';
+import { CompareDistrictsModal } from './components/CompareDistrictsModal';
+import { EmergencyHelplineBanner } from './components/EmergencyHelplineBanner';
+import { WomenSafetyModal } from './components/WomenSafetyModal';
+import { WomensCommunityView } from './components/WomensCommunityView';
+import { Language, getLanguagePreference, setLanguagePreference, t } from './services/languageService';
 
 import { Destination, TripPlannerInput, ItineraryDay, SavedTrip } from './types';
 import { DESTINATIONS_DATA } from './data/destinations';
@@ -24,7 +29,7 @@ import { FOOD_PLACES_DATA } from './data/foodPlaces';
 import { TN_DISTRICTS_DATA } from './data/districts';
 import { CATEGORIES, APP_CONFIG } from './config/appConfig';
 import { executeSmartSearch, SmartSearchResult } from './services/smartSearch';
-import { getOfficialDistrict } from './services/itineraryEngine';
+import { getOfficialDistrict, generateItinerary } from './services/itineraryEngine';
 import { StorageService } from './services/storageService';
 import {
   Compass,
@@ -47,6 +52,7 @@ export default function App() {
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [aboutModalOpen, setAboutModalOpen] = useState(false);
   const [offlineModalTrip, setOfflineModalTrip] = useState<SavedTrip | null>(null);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState<boolean>(false);
 
   // Active Generated Plan
   const [activePlannerInput, setActivePlannerInput] = useState<TripPlannerInput | null>(null);
@@ -60,9 +66,77 @@ export default function App() {
   const [savedCount, setSavedCount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Part 8.1 Pink Mode & Theme Management (saved in localStorage)
+  const [theme, setTheme] = useState<'light' | 'pink' | 'dark'>(() => {
+    const saved = localStorage.getItem('tamizn_theme');
+    if (saved === 'pink' || saved === 'dark' || saved === 'light') return saved;
+    return 'light';
+  });
+
+  // Part 8.2 Solo / Women Safety Mode (saved in localStorage)
+  const [isSafetyModeActive, setIsSafetyModeActive] = useState<boolean>(() => {
+    return localStorage.getItem('tamizn_women_safety_mode') === 'true';
+  });
+  const [isSafetyModalOpen, setIsSafetyModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    localStorage.setItem('tamizn_theme', theme);
+    document.documentElement.classList.remove('theme-pink', 'dark');
+    document.body.classList.remove('theme-pink', 'dark');
+    if (theme === 'pink') {
+      document.documentElement.classList.add('theme-pink');
+      document.body.classList.add('theme-pink');
+    } else if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    }
+  }, [theme]);
+
+  const toggleSafetyMode = () => {
+    const next = !isSafetyModeActive;
+    setIsSafetyModeActive(next);
+    localStorage.setItem('tamizn_women_safety_mode', String(next));
+  };
+
+  // Part 10 Tamil Language Management
+  const [language, setLanguage] = useState<Language>(() => {
+    return getLanguagePreference();
+  });
+
+  const toggleLanguage = () => {
+    const nextLang: Language = language === 'en' ? 'ta' : 'en';
+    setLanguage(nextLang);
+    setLanguagePreference(nextLang);
+  };
+
   useEffect(() => {
     setSavedCount(StorageService.getSavedTrips().length);
   }, [currentTab]);
+
+  // Deep link hash handler for Offline QR codes and compare modal
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#place=')) {
+        const placeId = hash.replace('#place=', '').trim();
+        const found = DESTINATIONS_DATA.find((d) => d.id === placeId);
+        if (found) {
+          setSelectedDestination(found);
+        }
+      } else if (hash.startsWith('#district=')) {
+        const dist = hash.replace('#district=', '').trim();
+        const official = getOfficialDistrict(dist);
+        setPrefilledDistrict(official);
+        setCurrentTab('explore');
+      } else if (hash === '#compare') {
+        setIsCompareModalOpen(true);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const handleSearch = (query: string) => {
     const res = executeSmartSearch(query);
@@ -117,6 +191,13 @@ export default function App() {
         }}
         onOpenAbout={() => setAboutModalOpen(true)}
         savedTripsCount={savedCount}
+        theme={theme}
+        onThemeChange={setTheme}
+        isSafetyModeActive={isSafetyModeActive}
+        onToggleSafetyMode={toggleSafetyMode}
+        onOpenSafetyModal={() => setIsSafetyModalOpen(true)}
+        language={language}
+        onToggleLanguage={toggleLanguage}
         onNavigateDestinations={() => {
           if (currentTab !== 'home') {
             setCurrentTab('home');
@@ -127,6 +208,14 @@ export default function App() {
             document.getElementById('discover-content')?.scrollIntoView({ behavior: 'smooth' });
           }
         }}
+      />
+
+      {/* Part 8.2 Persistent Emergency Helpline Banner when Safety Mode is Active */}
+      <EmergencyHelplineBanner
+        currentDistrict={activePlannerInput?.destinationDistrict || prefilledDistrict}
+        onOpenSafetyModal={() => setIsSafetyModalOpen(true)}
+        onToggleSafetyMode={toggleSafetyMode}
+        isSafetyModeActive={isSafetyModeActive}
       />
 
       {/* Primary Main View Port */}
@@ -238,7 +327,8 @@ export default function App() {
                       tamilTag: 'கோயில்கள் & ஆன்மீகம்',
                       location: 'Thanjavur & Madurai',
                       description: 'Chola, Pallava, and Pandya Dravidian architectural wonders',
-                      imageUrl: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/temples.jpg',
+                      altText: 'Vimana tower of the 11th-century Brihadisvara Temple in Thanjavur under blue skies',
                       tab: 'explore' as NavTab,
                     },
                     {
@@ -247,7 +337,8 @@ export default function App() {
                       tamilTag: 'பாரம்பரியம் & கோட்டைகள்',
                       location: 'Gingee & Chettinad',
                       description: 'Ancient citadels, royal palaces, and historic settlements',
-                      imageUrl: 'https://images.unsplash.com/photo-1600100397608-f010f443834e?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/heritage.jpg',
+                      altText: 'Panoramic view of the historic Gingee Fort stone fortifications and granary on the hills of Tamil Nadu',
                       tab: 'explore' as NavTab,
                     },
                     {
@@ -256,7 +347,8 @@ export default function App() {
                       tamilTag: 'கடற்கரைகள்',
                       location: 'Marina & Dhanushkodi',
                       description: 'Coromandel shores, three-sea confluences, and quiet coastal bays',
-                      imageUrl: 'https://images.unsplash.com/photo-1621682372775-533449e550ed?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/beaches.jpg',
+                      altText: 'Golden sands and breaking ocean waves along Marina Beach in Chennai at evening twilight',
                       tab: 'explore' as NavTab,
                     },
                     {
@@ -265,7 +357,8 @@ export default function App() {
                       tamilTag: 'மலைகள் & அருவிகள்',
                       location: 'Nilgiris & Courtallam',
                       description: 'Western Ghats tea valleys, misty peaks, and cascading waterfalls',
-                      imageUrl: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/hills.jpg',
+                      altText: 'Lush green undulating tea plantations in the misty Nilgiri mountains of Western Ghats',
                       tab: 'explore' as NavTab,
                     },
                     {
@@ -274,7 +367,8 @@ export default function App() {
                       tamilTag: 'உணவு கலாச்சாரம்',
                       location: 'Chettinad & Kongunadu',
                       description: 'Authentic Kongunadu, Chettinad, and Madurai culinary legends',
-                      imageUrl: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/food.jpg',
+                      altText: 'Authentic Tamil banana leaf meal with rice, sambar, rasam, kootu, poriyal, appalam, and payasam',
                       tab: 'food' as NavTab,
                     },
                     {
@@ -283,7 +377,8 @@ export default function App() {
                       tamilTag: 'வனவிலங்கு & இயற்கை',
                       location: 'Mudumalai & Anamalai',
                       description: 'Protected tiger corridors, mountain sholas, and tidal wetlands',
-                      imageUrl: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85',
+                      imageUrl: '/images/wildlife.jpg',
+                      altText: 'Royal Bengal Tiger walking through natural forest reserve in Mudumalai Tiger Reserve',
                       tab: 'explore' as NavTab,
                     },
                   ].map((exp) => (
@@ -298,7 +393,7 @@ export default function App() {
                       {/* Real Tamil Nadu photograph full-bleed */}
                       <img
                         src={exp.imageUrl}
-                        alt={exp.name}
+                        alt={exp.altText}
                         className="absolute inset-0 w-full h-full object-cover object-center transform scale-100 group-hover:scale-108 transition-transform duration-700 ease-out"
                         loading="lazy"
                       />
@@ -550,6 +645,14 @@ export default function App() {
               <ItineraryDashboard
                 plannerInput={activePlannerInput}
                 itineraryDays={activeItineraryDays}
+                onShuffle={() => {
+                  const newSeed = Math.floor(Math.random() * 1000000);
+                  const updatedDays = generateItinerary({
+                    ...activePlannerInput,
+                    seed: newSeed,
+                  });
+                  setActiveItineraryDays(updatedDays);
+                }}
                 onOpenOfflineDossier={() => {
                   const saved = StorageService.saveTrip(
                     `${activePlannerInput.destinationDistrict} Journey`,
@@ -612,6 +715,15 @@ export default function App() {
           />
         )}
 
+        {/* ==================================================== */}
+        {/* 8. WOMEN'S TRAVEL COMMUNITY (Part 9)                 */}
+        {/* ==================================================== */}
+        {currentTab === 'community' && (
+          <WomensCommunityView
+            initialDistrict={activePlannerInput?.destinationDistrict || prefilledDistrict}
+          />
+        )}
+
       </main>
 
       {/* Destination Detail Modal */}
@@ -629,6 +741,25 @@ export default function App() {
 
       {/* Institutional About / Innovation Modal */}
       {aboutModalOpen && <AboutModal onClose={() => setAboutModalOpen(false)} />}
+
+      {/* Compare Two Districts Modal */}
+      <CompareDistrictsModal
+        isOpen={isCompareModalOpen}
+        onClose={() => {
+          setIsCompareModalOpen(false);
+          if (window.location.hash === '#compare') {
+            window.location.hash = '';
+          }
+        }}
+        onPlanTrip={handleStartPlanForDistrict}
+      />
+
+      {/* Part 8.2 Solo / Women Travel Safety Directory Modal */}
+      <WomenSafetyModal
+        initialDistrict={activePlannerInput?.destinationDistrict || prefilledDistrict}
+        isOpen={isSafetyModalOpen}
+        onClose={() => setIsSafetyModalOpen(false)}
+      />
 
       {/* Persistent Footer */}
       <Footer

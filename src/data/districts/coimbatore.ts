@@ -21,7 +21,7 @@ export const coimbatorePlaces: Place[] = [
     "sourceUrl": "https://hrce.tn.gov.in",
     "confidence": "High",
     "lastVerified": "2026-03",
-    "imageUrl": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=85"
+    "imageUrl": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%232a181b'/><stop offset='50%25' stop-color='%23422026'/><stop offset='100%25' stop-color='%231f1013'/></linearGradient></defs><rect width='800' height='600' fill='url(%23g)'/><circle cx='400' cy='300' r='160' fill='%23C8962E' fill-opacity='0.08'/><text x='50%25' y='48%25' dominant-baseline='middle' text-anchor='middle' fill='%23C8962E' font-family='serif' font-size='26' letter-spacing='2'>MARUDHAMALAI</text><text x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' fill='%23e7e5e4' font-family='sans-serif' font-size='15' letter-spacing='1'>Hilltop Murugan Sanctuary</text></svg>"
   },
   {
     "id": "cbe-perur",

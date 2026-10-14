@@ -8,7 +8,9 @@ import {
 } from '../types';
 import { TN_DISTRICTS } from '../config/appConfig';
 import { generateItinerary, getOfficialDistrict } from '../services/itineraryEngine';
-import { loadDistrictPlaces } from '../data/districts';
+import { getPlacesForDistrict, loadDistrictPlaces } from '../data/districts';
+import { ALL_RESTAURANTS } from '../data/restaurants';
+import { EmeraldDoveRoundel } from './TamilBrandLogo';
 import {
   MapPin,
   Calendar,
@@ -206,7 +208,9 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
             </h2>
           </div>
           <div className="text-right">
-            <span className="text-xs font-bold text-stone-500">Step {currentStep} of 8</span>
+            <span className="text-xs font-bold text-stone-500">
+              {currentStep > 8 ? 'Generating Plan' : `Step ${currentStep} of 8`}
+            </span>
             <div className="text-[11px] text-stone-400">All 38 TN Districts Supported</div>
           </div>
         </div>
@@ -328,38 +332,75 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
         )}
 
         {/* STEP 3: NUMBER OF DAYS */}
-        {currentStep === 3 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-serif font-bold text-stone-900 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-amber-600" />
-                Step 3: Number of Days
-              </h3>
-              <p className="text-xs text-stone-500 mt-1">
-                Realistic 06:00 AM – 09:00 PM day windows organized geographically without backtracking.
-              </p>
-            </div>
+        {currentStep === 3 && (() => {
+          const verifiedPlacesCount = getPlacesForDistrict(destinationDistrict).length;
+          const verifiedRestaurantsCount = ALL_RESTAURANTS.filter(
+            (r) => getOfficialDistrict(r.district) === destinationDistrict
+          ).length;
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
-              {[1, 2, 3, 4, 5, 7].map((num) => (
-                <button
-                  key={num}
-                  onClick={() => setNumberOfDays(num)}
-                  className={`p-6 rounded-2xl border text-center transition-all ${
-                    numberOfDays === num
-                      ? 'bg-amber-600 text-white border-amber-600 shadow-lg scale-102 font-bold'
-                      : 'bg-stone-50 text-stone-800 border-stone-200 hover:bg-stone-100 hover:border-amber-300'
-                  }`}
-                >
-                  <div className="text-3xl font-serif font-extrabold mb-1">{num}</div>
-                  <div className="text-xs font-semibold uppercase tracking-wider">
-                    {num === 1 ? 'Single Day' : `${num} Days`}
-                  </div>
-                </button>
-              ))}
+          // Part 2.5: maxDays = min(7, floor(verifiedPlaces / 5), floor(verifiedRestaurants / 3))
+          const calculatedMaxDays = Math.min(
+            7,
+            Math.floor(verifiedPlacesCount / 5),
+            Math.floor(verifiedRestaurantsCount / 3)
+          );
+          const maxDays = Math.max(1, calculatedMaxDays);
+
+          return (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-serif font-bold text-stone-900 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-amber-600" />
+                  Step 3: Number of Days
+                </h3>
+                <p className="text-xs text-stone-500 mt-1">
+                  Realistic 06:00 AM – 09:00 PM day windows organized geographically without backtracking.
+                </p>
+                <div className="mt-2 text-xs text-stone-600 bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200 inline-flex items-center gap-2">
+                  <span>
+                    Verified Data for <strong>{destinationDistrict}</strong>: {verifiedPlacesCount} places, {verifiedRestaurantsCount} food spots. Guaranteed zero-repeat cap:{' '}
+                    <strong>{maxDays} {maxDays === 1 ? 'day' : 'days'}</strong>.
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
+                {[1, 2, 3, 4, 5, 7].map((num) => {
+                  const isDisabled = num > maxDays;
+                  return (
+                    <button
+                      key={num}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) setNumberOfDays(num);
+                      }}
+                      className={`p-5 rounded-2xl border text-center transition-all relative flex flex-col justify-between ${
+                        isDisabled
+                          ? 'bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed opacity-60'
+                          : numberOfDays === num
+                          ? 'bg-amber-600 text-white border-amber-600 shadow-lg scale-102 font-bold cursor-pointer'
+                          : 'bg-stone-50 text-stone-800 border-stone-200 hover:bg-stone-100 hover:border-amber-300 cursor-pointer'
+                      }`}
+                    >
+                      <div>
+                        <div className="text-3xl font-serif font-extrabold mb-1">{num}</div>
+                        <div className="text-xs font-semibold uppercase tracking-wider">
+                          {num === 1 ? 'Single Day' : `${num} Days`}
+                        </div>
+                      </div>
+                      {isDisabled && (
+                        <div className="mt-2 text-[10px] leading-tight text-amber-900 bg-amber-50/90 p-1.5 rounded border border-amber-200">
+                          More days need more verified places in this district.
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* STEP 4: NUMBER OF TRAVELERS */}
         {currentStep === 4 && (
@@ -565,8 +606,13 @@ export const MultiStepPlanner: React.FC<MultiStepPlannerProps> = ({
         {/* STEP 9: GENERATION PROGRESS */}
         {currentStep === 9 && (
           <div className="py-16 text-center space-y-6">
-            <div className="inline-block p-4 rounded-full bg-amber-50 text-amber-600 animate-pulse">
-              <Loader2 className="w-10 h-10 animate-spin" />
+            <div className="flex justify-center">
+              <div className="relative inline-block">
+                <EmeraldDoveRoundel sizeClassName="w-20 h-20 animate-pulse" />
+                <div className="absolute -bottom-1 -right-1 bg-amber-500 text-stone-950 p-1.5 rounded-full shadow-lg">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                </div>
+              </div>
             </div>
             <div className="space-y-2">
               <h3 className="text-xl font-serif font-bold text-stone-900">

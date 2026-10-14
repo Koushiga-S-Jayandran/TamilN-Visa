@@ -9,7 +9,9 @@ import {
   Check,
   Tag,
   DollarSign,
+  ExternalLink,
 } from 'lucide-react';
+import { buildGoogleMapsUrl } from '../utils/maps';
 
 export const FoodDiscoveryView: React.FC = () => {
   const [filterType, setFilterType] = useState<'all' | 'veg' | 'nonveg' | 'student'>('all');
@@ -180,9 +182,26 @@ export const FoodDiscoveryView: React.FC = () => {
                 <span className="line-clamp-2">{place.address}</span>
               </div>
 
-              <div className="text-[10px] text-stone-400 flex items-center gap-1 truncate pt-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-                <span className="truncate">Verified: {place.source.sourceName}</span>
+              <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-2">
+                <a
+                  href={buildGoogleMapsUrl({
+                    name: place.name,
+                    locality: place.cityArea,
+                    district: place.district,
+                  })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold text-amber-700 hover:text-amber-900 inline-flex items-center gap-1"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>View on Google Maps</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+
+                <div className="text-[10px] text-stone-400 flex items-center gap-1 truncate">
+                  <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span className="truncate">Verified: {place.source.sourceName}</span>
+                </div>
               </div>
             </div>
           </div>

@@ -14,6 +14,7 @@ import {
   Info,
   CheckCircle2,
 } from 'lucide-react';
+import { buildGoogleMapsUrl } from '../utils/maps';
 
 interface WhereToStayCardProps {
   district: string;
@@ -208,10 +209,20 @@ export const WhereToStayCard: React.FC<WhereToStayCardProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-2 border-t border-stone-200/80 flex items-center justify-between gap-2">
-              <div className="text-[10px] text-stone-500 font-mono">
-                {stay.sourceName}
-              </div>
+            <div className="pt-2 border-t border-stone-200/80 flex flex-wrap items-center justify-between gap-2">
+              <a
+                href={buildGoogleMapsUrl({
+                  name: stay.name,
+                  locality: stay.locality,
+                  district: stay.district,
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-bold text-amber-700 hover:text-amber-900 inline-flex items-center gap-1"
+              >
+                <MapPin className="w-3 h-3" />
+                <span>View on Google Maps</span>
+              </a>
 
               {!isOfflineDossier ? (
                 <a

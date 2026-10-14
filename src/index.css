@@ -200,3 +200,78 @@
     color: black !important;
   }
 }
+
+/* =========================================================================
+   PART 8: PINK MODE PALETTE & WCAG AA CONTRAST STYLING
+   Background: #FFF5F7 | Surface: #FFFFFF | Accent: #C2527A | Text: #3B2230
+   ========================================================================= */
+body.theme-pink,
+html.theme-pink,
+.theme-pink {
+  --bg-main: #FFF5F7;
+  --surface-main: #FFFFFF;
+  --accent-main: #C2527A;
+  --accent-hover: #A83B63;
+  --text-main: #3B2230;
+  --text-muted: #6E4E60;
+  --border-main: #F7D1DF;
+  background-color: #FFF5F7 !important;
+  color: #3B2230 !important;
+}
+
+.theme-pink .bg-stone-100,
+.theme-pink .bg-stone-50 {
+  background-color: #FFF5F7 !important;
+}
+
+.theme-pink .bg-white {
+  background-color: #FFFFFF !important;
+}
+
+.theme-pink .text-stone-900,
+.theme-pink .text-stone-800,
+.theme-pink .text-stone-700 {
+  color: #3B2230 !important;
+}
+
+.theme-pink .text-stone-600,
+.theme-pink .text-stone-500 {
+  color: #6E4E60 !important;
+}
+
+.theme-pink .border-stone-200,
+.theme-pink .border-stone-300 {
+  border-color: #F7D1DF !important;
+}
+
+.theme-pink .bg-amber-600,
+.theme-pink .bg-amber-700 {
+  background-color: #C2527A !important;
+}
+
+.theme-pink .hover\:bg-amber-700:hover,
+.theme-pink .hover\:bg-amber-600:hover {
+  background-color: #A83B63 !important;
+}
+
+.theme-pink .text-amber-600,
+.theme-pink .text-amber-700,
+.theme-pink .text-amber-800 {
+  color: #C2527A !important;
+}
+
+.theme-pink .bg-amber-50,
+.theme-pink .bg-amber-50\/80,
+.theme-pink .bg-amber-50\/70 {
+  background-color: #FCE8EF !important;
+}
+
+.theme-pink .border-amber-200,
+.theme-pink .border-amber-300 {
+  border-color: #F7D1DF !important;
+}
+
+.theme-pink .ring-amber-500 {
+  --tw-ring-color: #C2527A !important;
+}
+

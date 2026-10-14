@@ -13,12 +13,14 @@ import {
   Clock,
   PhoneCall,
   AlertTriangle,
+  Share2,
 } from 'lucide-react';
 import { WeatherForecastWidget } from './WeatherForecastWidget';
 import { WhereToStayCard } from './WhereToStayCard';
 import { PublicTransportCard } from './PublicTransportCard';
 import { DESTINATIONS_DATA } from '../data/destinations';
 import { EmeraldDoveRoundel } from './TamilBrandLogo';
+import { shareTripViaWhatsApp } from '../services/whatsappShare';
 
 interface OfflineTripSummaryModalProps {
   trip: SavedTrip | null;
@@ -64,6 +66,25 @@ export const OfflineTripSummaryModal: React.FC<OfflineTripSummaryModalProps> = (
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() =>
+                shareTripViaWhatsApp({
+                  tripName: trip.name,
+                  itineraryDays: trip.itineraryDays,
+                  district: trip.destinationDistrict,
+                  travelDate: trip.travelDate,
+                  numberOfDays: trip.numberOfDays,
+                  travelers: trip.travelers,
+                  travelerType: trip.travelerType,
+                  budgetINR: trip.budgetUsedINR,
+                })
+              }
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md"
+              title="Share verified trip plan on WhatsApp"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Share via WhatsApp</span>
+            </button>
             <button
               onClick={handlePrint}
               className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs flex items-center gap-1.5 transition-colors"

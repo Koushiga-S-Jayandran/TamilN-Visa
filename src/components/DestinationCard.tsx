@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Destination } from '../types';
 import { evaluateCrowd } from '../services/crowdEngine';
 import { getDestinationWeather } from '../services/weatherService';
 import { TamilWeatherBadge } from './TamilWeatherBadge';
+import { OfflinePlaceQRModal } from './OfflinePlaceQRModal';
 import {
   MapPin,
   Clock,
@@ -12,7 +13,10 @@ import {
   Bookmark,
   Sun,
   Compass,
+  QrCode,
+  ExternalLink,
 } from 'lucide-react';
+import { buildGoogleMapsUrl } from '../utils/maps';
 
 interface DestinationCardProps {
   destination: Destination;
@@ -27,6 +31,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
   onBookmark,
   isBookmarked = false,
 }) => {
+  const [showQrModal, setShowQrModal] = useState<boolean>(false);
   const crowd = evaluateCrowd(destination);
   const weather = getDestinationWeather(destination);
 
@@ -164,6 +169,34 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
               <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-600' : ''}`} />
             </button>
           )}
+
+          {/* View on Google Maps Button */}
+          <a
+            href={buildGoogleMapsUrl({
+              name: destination.name,
+              locality: destination.cityArea,
+              district: destination.district,
+            })}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View on Google Maps"
+            onClick={(e) => e.stopPropagation()}
+            className="p-3 rounded-2xl border border-stone-300 bg-white hover:bg-amber-50 hover:border-amber-400 text-stone-700 transition-all flex items-center justify-center shrink-0"
+          >
+            <MapPin className="w-4 h-4 text-amber-700" />
+          </a>
+
+          {/* Offline QR Deep Link Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowQrModal(true);
+            }}
+            title="Scan Offline QR Deep Link"
+            className="p-3 rounded-2xl border border-stone-300 bg-white hover:bg-amber-50 hover:border-amber-400 text-stone-700 transition-all flex items-center justify-center shrink-0"
+          >
+            <QrCode className="w-4 h-4 text-amber-700" />
+          </button>
         </div>
 
         {/* Source citation */}
@@ -173,6 +206,13 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
         </div>
 
       </div>
+
+      {/* Offline Place QR Deep Link Modal */}
+      <OfflinePlaceQRModal
+        destination={destination}
+        isOpen={showQrModal}
+        onClose={() => setShowQrModal(false)}
+      />
 
     </div>
   );

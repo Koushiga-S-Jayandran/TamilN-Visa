@@ -4,9 +4,11 @@ import { DESTINATIONS_DATA } from '../data/destinations';
 import { FOOD_PLACES_DATA } from '../data/foodPlaces';
 import { TN_DISTRICTS_DATA, DistrictInfo, loadDistrictPlaces } from '../data/districts';
 import { CATEGORIES, CategoryId, TN_DISTRICTS } from '../config/appConfig';
+import { evaluateCrowd } from '../services/crowdEngine';
 import { DestinationCard } from './DestinationCard';
 import { InteractiveMap } from './InteractiveMap';
 import { KolamDivider } from './KolamAccents';
+import { CompareDistrictsModal } from './CompareDistrictsModal';
 import {
   MapPin,
   Layers,
@@ -19,6 +21,7 @@ import {
   Compass,
   ArrowRight,
   ChevronRight,
+  Scale,
 } from 'lucide-react';
 
 interface ExploreViewProps {
@@ -34,6 +37,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  const [hiddenGemsOnly, setHiddenGemsOnly] = useState<boolean>(false);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState<boolean>(false);
 
   // Trigger lazy loading of the district module when selected
   useEffect(() => {
@@ -56,6 +61,16 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const filteredDestinations = DESTINATIONS_DATA.filter((dest) => {
     if (selectedDistrict !== 'all' && dest.district !== selectedDistrict) {
       return false;
+    }
+    // Strict "Hidden Gems Only" filter: show only verified low-crowd/lesser-known places, hide high-crowd hotspots
+    if (hiddenGemsOnly) {
+      const crowd = evaluateCrowd(dest);
+      if (!dest.isHiddenGem && crowd.crowdLevel !== 'LOW') {
+        return false;
+      }
+      if (crowd.crowdLevel === 'HIGH' || crowd.crowdLevel === 'VERY HIGH') {
+        return false;
+      }
     }
     if (selectedCategory !== 'all') {
       if (selectedCategory === 'hidden_gems') {
@@ -94,30 +109,41 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             </p>
           </div>
 
-          {/* View mode toggle */}
-          <div className="flex items-center gap-2 bg-stone-100 p-1.5 rounded-2xl border border-stone-300 self-start md:self-auto shrink-0 shadow-inner">
+          {/* View mode toggle & Compare Districts */}
+          <div className="flex flex-wrap items-center gap-2 self-start md:self-auto shrink-0">
             <button
-              onClick={() => setViewMode('grid')}
-              className={`px-4 py-2 rounded-xl text-xs font-black tracking-wider uppercase transition-all flex items-center gap-2 ${
-                viewMode === 'grid'
-                  ? 'bg-white text-stone-900 shadow-md border border-stone-200'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
+              onClick={() => setIsCompareModalOpen(true)}
+              className="px-4 py-2 rounded-2xl text-xs font-black tracking-wider uppercase transition-all flex items-center gap-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-500/30 shadow-sm"
+              title="Compare any two Tamil Nadu districts side-by-side"
             >
-              <Grid className="w-4 h-4 text-amber-700" />
-              <span>Grid View</span>
+              <Scale className="w-4 h-4 text-amber-700" />
+              <span>Compare Districts</span>
             </button>
-            <button
-              onClick={() => setViewMode('map')}
-              className={`px-4 py-2 rounded-xl text-xs font-black tracking-wider uppercase transition-all flex items-center gap-2 ${
-                viewMode === 'map'
-                  ? 'bg-amber-600 text-white shadow-md'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <MapIcon className="w-4 h-4" />
-              <span>Interactive Map</span>
-            </button>
+
+            <div className="flex items-center gap-1 bg-stone-100 p-1.5 rounded-2xl border border-stone-300 shadow-inner">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-black tracking-wider uppercase transition-all flex items-center gap-1.5 ${
+                  viewMode === 'grid'
+                    ? 'bg-white text-stone-900 shadow-md border border-stone-200'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <Grid className="w-3.5 h-3.5 text-amber-700" />
+                <span>Grid</span>
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-black tracking-wider uppercase transition-all flex items-center gap-1.5 ${
+                  viewMode === 'map'
+                    ? 'bg-amber-600 text-white shadow-md'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                <MapIcon className="w-3.5 h-3.5" />
+                <span>Map</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -235,6 +261,25 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           Filter by Cultural Category:
         </span>
         <div className="flex flex-wrap items-center gap-2.5">
+          {/* Strict Hidden Gems Only Toggle */}
+          <button
+            onClick={() => setHiddenGemsOnly(!hiddenGemsOnly)}
+            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all border flex items-center gap-1.5 shadow-sm ${
+              hiddenGemsOnly
+                ? 'bg-amber-500 text-stone-950 border-amber-600 ring-2 ring-amber-400/50 shadow-md'
+                : 'bg-white text-stone-700 border-stone-300 hover:border-amber-400 hover:bg-amber-50/50'
+            }`}
+            title="Strictly show low-crowd and secluded places inside the selected district"
+          >
+            <Sparkles className={`w-3.5 h-3.5 ${hiddenGemsOnly ? 'text-stone-950 fill-stone-950' : 'text-amber-600'}`} />
+            <span>Hidden Gems Only</span>
+            {hiddenGemsOnly && (
+              <span className="px-1.5 py-0.2 rounded bg-stone-950 text-amber-300 text-[10px] font-mono">
+                Active
+              </span>
+            )}
+          </button>
+
           <button
             onClick={() => setSelectedCategory('all')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
@@ -441,6 +486,15 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           )}
         </div>
       )}
+
+      {/* Compare Two Districts Modal */}
+      <CompareDistrictsModal
+        isOpen={isCompareModalOpen}
+        onClose={() => setIsCompareModalOpen(false)}
+        initialDistrict1={selectedDistrict !== 'all' ? selectedDistrict : 'Madurai'}
+        initialDistrict2={selectedDistrict !== 'all' && selectedDistrict !== 'Thanjavur' ? 'Thanjavur' : 'Coimbatore'}
+        onPlanTrip={onPlanTripForDistrict}
+      />
 
       <KolamDivider />
     </div>

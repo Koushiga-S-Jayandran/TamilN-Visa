@@ -9,7 +9,10 @@ import {
   MapPin,
   CheckCircle2,
   BookOpen,
+  Camera,
+  ExternalLink,
 } from 'lucide-react';
+import { IMAGE_CREDITS_DATA } from '../data/imageCredits';
 
 interface AboutModalProps {
   onClose: () => void;
@@ -231,6 +234,47 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
                       </span>
                     </div>
                     <p className="text-[11px] text-stone-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Photo Credits Section */}
+            <div id="photo-credits" className="space-y-4 pt-2">
+              <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                <h3 className="text-xs uppercase font-bold tracking-wider text-stone-900 flex items-center gap-1.5">
+                  <Camera className="w-4 h-4 text-amber-700" />
+                  Photo Credits & Licensing
+                </h3>
+                <span className="text-[10px] font-mono text-stone-500 uppercase">
+                  Wikimedia Commons
+                </span>
+              </div>
+              <p className="text-xs text-stone-600">
+                All home page and experience imagery are freely licensed from Wikimedia Commons (Public Domain or Creative Commons). Downloaded locally to prevent external hotlinking:
+              </p>
+              <div className="space-y-2 text-xs">
+                {IMAGE_CREDITS_DATA.map((credit) => (
+                  <div
+                    key={credit.id}
+                    className="p-3 bg-stone-50 rounded-xl border border-stone-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                  >
+                    <div className="space-y-0.5">
+                      <strong className="text-stone-900">{credit.category}:</strong>{' '}
+                      <span className="text-stone-700">{credit.subject}</span>
+                      <div className="text-[11px] text-stone-500 font-mono">
+                        Author: {credit.author} • License: {credit.license}
+                      </div>
+                    </div>
+                    <a
+                      href={credit.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-amber-800 hover:text-amber-950 font-bold inline-flex items-center gap-1 text-[11px] shrink-0"
+                    >
+                      <span>Wikimedia Commons</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
                   </div>
                 ))}
               </div>

@@ -51,6 +51,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
               </li>
               <li>
                 <button
+                  onClick={() => {
+                    window.location.hash = '#compare';
+                  }}
+                  className="hover:text-amber-300 transition-colors flex items-center gap-1 text-amber-300 font-medium"
+                >
+                  <span>Compare Two Districts</span>
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onSelectTab('planner')}
                   className="hover:text-amber-300 transition-colors"
                 >
@@ -91,6 +101,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
               </li>
               <li>
                 <button
+                  onClick={() => {
+                    window.location.hash = '#compare';
+                  }}
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  Compare Two Districts
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={onOpenAbout}
                   className="hover:text-amber-300 transition-colors"
                 >
@@ -109,6 +129,19 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAbout }) => {
                 >
                   <Sparkles className="w-3 h-3 text-purple-400" />
                   <span>Future Plans (3 Phases)</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    onOpenAbout();
+                    setTimeout(() => {
+                      document.getElementById('photo-credits')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 150);
+                  }}
+                  className="hover:text-amber-300 transition-colors text-amber-300/80 font-medium"
+                >
+                  Photo Credits (Wikimedia Commons)
                 </button>
               </li>
             </ul>

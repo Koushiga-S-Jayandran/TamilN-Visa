@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Base Maroon Disc -->
+  <circle cx="32" cy="32" r="30" fill="#7A1F2B" stroke="#C8962E" stroke-width="2" />
+  <circle cx="32" cy="32" r="28" stroke="#C8962E" stroke-width="0.75" stroke-opacity="0.4" />
+  <!-- Ring of 12 Kolam-Style Gold Dots -->
+  <circle cx="57.5" cy="32" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="54.08" cy="44.75" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="44.75" cy="54.08" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="32" cy="57.5" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="19.25" cy="54.08" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="9.92" cy="44.75" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="6.5" cy="32" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="9.92" cy="19.25" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="19.25" cy="9.92" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="32" cy="6.5" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="44.75" cy="9.92" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <circle cx="54.08" cy="19.25" r="1.2" fill="#FFFDF5" stroke="#C8962E" stroke-width="0.5" />
+  <!-- Inner Glow -->
+  <circle cx="32" cy="32" r="21" fill="#8B2432" opacity="0.6" />
+  <!-- Perch -->
+  <path d="M14 43C22 41 42 41 50 44" stroke="#C8962E" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M36 43C39 40 45 39 48 40" stroke="#A17420" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Feet -->
+  <path d="M33 40L33 42.5M36 40L36 42.5" stroke="#E11D48" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Tail -->
+  <path d="M20 37C18 41 16 46 15 48C17 48 22 44 24 40Z" fill="#4A2810" stroke="#C8962E" stroke-width="0.5" />
+  <!-- Green Wings -->
+  <path d="M24 33C24 27 29 25 35 25C40 25 43 28 43 32C43 36 38 40 32 40C27 40 24 37 24 33Z" fill="#1B7A43" />
+  <path d="M22 34C22 30 26 27 33 27C37 27 40 30 40 34C37 38 31 39 25 38Z" fill="#239454" />
+  <path d="M21 36C22 32 27 29 34 30C32 35 27 38 22 38Z" fill="#155D34" />
+  <!-- White Shoulder Patch -->
+  <path d="M27 27C29 25.5 32 25.5 34 26.5C33 28 30 29.5 28 29.5C26.5 29.5 26 28 27 27Z" fill="#FFFDF5" />
+  <!-- Breast & Head -->
+  <path d="M34 26C35 24 37 21 41 21C45 21 48 23.5 48 26.5C48 30 44 33 38 34C36 32 34 29 34 26Z" fill="#C49A94" />
+  <path d="M38 24C39 22.5 41 21.5 43.5 21.5C45.5 21.5 47 22.5 47 24C45 25 42 26 38 24Z" fill="#D8B4AF" />
+  <!-- Eye -->
+  <circle cx="44.5" cy="24" r="1.8" fill="#FFFDF5" />
+  <circle cx="44.8" cy="24" r="1" fill="#1C1917" />
+  <!-- Bill -->
+  <path d="M47 24.5L52 25.5L47 27Z" fill="#DC2626" />
+  <circle cx="51.5" cy="25.5" r="0.6" fill="#F87171" />
+</svg>

@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with display name, home city, and verified badge",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "homeCity": { "type": "string" },
+        "bio": { "type": "string" },
+        "verifiedBadge": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "displayName"]
+    },
+    "CommunitySafetyTip": {
+      "title": "CommunitySafetyTip",
+      "description": "Traveler safety tip by district and category",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorCity": { "type": "string" },
+        "isVerifiedUser": { "type": "boolean" },
+        "district": { "type": "string" },
+        "category": { "type": "string", "enum": ["Safety", "Transport", "Stays", "Food", "Solo-friendly"] },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "upvotes": { "type": "number" },
+        "reportedCount": { "type": "number" }
+      },
+      "required": ["id", "authorId", "authorName", "district", "category", "title", "content"]
+    },
+    "FemaleGuide": {
+      "title": "FemaleGuide",
+      "description": "Verified female guide and cultural local host directory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "district": { "type": "string" },
+        "languages": { "type": "array" },
+        "contactUrl": { "type": "string" },
+        "verified": { "type": "boolean" },
+        "specialization": { "type": "string" },
+        "shortBio": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["id", "name", "district", "contactUrl"]
+    },
+    "CompanionPost": {
+      "title": "CompanionPost",
+      "description": "Looking for travel buddy companion requests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorCity": { "type": "string" },
+        "isVerifiedUser": { "type": "boolean" },
+        "destinationDistrict": { "type": "string" },
+        "travelMonth": { "type": "string" },
+        "preferredPacing": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "repliesCount": { "type": "number" },
+        "reportedCount": { "type": "number" }
+      },
+      "required": ["id", "authorId", "authorName", "destinationDistrict", "travelMonth", "description"]
+    },
+    "ModerationReport": {
+      "title": "ModerationReport",
+      "description": "Content moderation reports filed by travelers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "targetType": { "type": "string" },
+        "targetId": { "type": "string" },
+        "reason": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "targetId", "reason"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile data, editable by the owner"
+    },
+    "/safety_tips/{tipId}": {
+      "schema": "CommunitySafetyTip",
+      "description": "Public community safety tips by district, editable by author"
+    },
+    "/female_guides/{guideId}": {
+      "schema": "FemaleGuide",
+      "description": "Public directory of verified female guides and local hosts"
+    },
+    "/companion_posts/{postId}": {
+      "schema": "CompanionPost",
+      "description": "Public companion finder requests, editable by author"
+    },
+    "/reports/{reportId}": {
+      "schema": "ModerationReport",
+      "description": "Flagged posts submitted for review"
+    }
+  }
+}

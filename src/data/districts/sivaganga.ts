@@ -22,6 +22,48 @@ export const sivagangaPlaces: Place[] = [
     "confidence": "High",
     "lastVerified": "2026-03",
     "imageUrl": "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=85"
+  },
+  {
+    "id": "svg-kundrakudi-murugan",
+    "name": "Kundrakudi Shanmuganathan Murugan Temple",
+    "nameTamil": "குன்றக்குடி சண்முகநாதர் கோயில்",
+    "district": "Sivaganga",
+    "locality": "Kundrakudi",
+    "category": "Temples & Spiritual",
+    "latitude": 10.1194,
+    "longitude": 78.7058,
+    "description": "Historic rock-cut cave temple atop an eighty-foot granite hill dedicated to Lord Murugan with six faces, revered in classical Tamil devotional hymns.",
+    "visitingHours": "06:00 AM - 12:30 PM, 04:00 PM - 08:30 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to March",
+    "dressCode": "Traditional temple clothing.",
+    "recommendedDurationMins": 90,
+    "accessibilityNotes": "Stone steps leading to hill summit; handrails provided.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03"
+  },
+  {
+    "id": "svg-kalayar-kovil",
+    "name": "Kalaiyar Kovil Kaleeswarar Temple",
+    "nameTamil": "காளையார் கோவில் காளீஸ்வரர் கோயில்",
+    "district": "Sivaganga",
+    "locality": "Kalaiyar Kovil",
+    "category": "Temples & Spiritual",
+    "latitude": 9.8458,
+    "longitude": 78.6472,
+    "description": "Eighth-century temple with an eighteen-tier monumental gopuram and golden tank, fortified historic headquarters of Maruthu Pandiyar freedom fighters.",
+    "visitingHours": "06:00 AM - 12:30 PM, 04:30 PM - 08:30 PM",
+    "entryFee": "Free",
+    "bestSeason": "October to February",
+    "dressCode": "Traditional modest attire.",
+    "recommendedDurationMins": 75,
+    "accessibilityNotes": "Prakaram flooring level and paved with granite slabs.",
+    "sourceName": "HR&CE Department Tamil Nadu",
+    "sourceUrl": "https://hrce.tn.gov.in",
+    "confidence": "High",
+    "lastVerified": "2026-03"
   }
 ];
 

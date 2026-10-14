@@ -143,13 +143,43 @@ export interface DestinationAlert {
   verifiedAt: string;
 }
 
+export type DietType = 'Pure Veg' | 'Veg & Non-veg';
+export type MealType = 'breakfast' | 'lunch' | 'snacks' | 'dinner';
+
+export interface Restaurant {
+  id: string;
+  name: string;
+  nameTamil: string;
+  district: string;
+  locality: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  cuisine: string;
+  dietType: DietType;
+  mealTypes: MealType[];
+  openingHours: string;
+  avgCostPerPerson: number | null;
+  signatureDishes: string[];
+  googleMapsPlaceId?: string;
+  sourceName: string;
+  sourceUrl: string;
+  confidence: 'High' | 'Medium';
+  lastVerified: string;
+}
+
 export interface ActivitySlot {
   timeWindow: string; // e.g. "06:30 - 08:00 AM"
   activityType: 'DESTINATION' | 'TRANSIT' | 'MEAL' | 'REST';
   title: string;
+  nameTamil?: string;
   category?: string;
   destinationId?: string;
+  restaurantId?: string;
   district?: string;
+  locality?: string;
+  latitude?: number;
+  longitude?: number;
   durationMinutes: number;
   travelBufferMinutes?: number;
   crowdLevel?: CrowdLevel;
@@ -158,6 +188,14 @@ export interface ActivitySlot {
   whyNowReason: string;
   transportInfo?: string;
   notes?: string;
+  googleMapsUrl?: string;
+  // Specific meal & restaurant fields
+  mealType?: MealType;
+  chosenRestaurant?: Restaurant;
+  alternativeRestaurants?: {
+    restaurant: Restaurant;
+    distanceKm: number;
+  }[];
 }
 
 export interface ItineraryDay {
@@ -167,6 +205,10 @@ export interface ItineraryDay {
   summary: string;
   activities: ActivitySlot[];
   dayBudgetINR: number;
+  placesCount?: number;
+  mealsCount?: number;
+  approxDistanceKm?: number;
+  exceptionNote?: string;
 }
 
 export type TravelerType = 'Family' | 'Solo' | 'Friends' | 'Couple' | 'Student' | 'Senior-friendly';
@@ -195,6 +237,8 @@ export interface TripPlannerInput {
   customBudgetINR?: number;
   selectedInterests: string[];
   selectedPreferences: TravelPreference[];
+  seed?: number;
+  isVegetarian?: boolean;
 }
 
 export interface SavedTrip {
